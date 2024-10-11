@@ -22,7 +22,9 @@ public class Recette {
     private String source;
     private String url;
     private String directions;
-    //private Difficulty difficulty;
+
+    @Enumerated(value = EnumType.STRING)
+    private Difficulty difficulty;
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "recette")
     private Set<Ingredient> ingredients;
@@ -32,6 +34,16 @@ public class Recette {
 
     @OneToOne(cascade = CascadeType.ALL)
     private Notes notes;
+
+    /*
+    Since this is many to many we need a jointable , join columns, and inverse join column. for join column and inverse join column we use "[class name lower case]_id". In this way, then the table name is created
+    it joins to id to each other. Note that, in category class file, we use only "mappedby" to tell which variable in here is mapped to
+     */
+    @ManyToMany
+    @JoinTable(name = "recette_category",
+            joinColumns = @JoinColumn(name ="recette_id"),
+            inverseJoinColumns = @JoinColumn(name ="category_id"))
+    private Set<Category> categories;
 
     public Long getId() {
         return id;
@@ -119,5 +131,21 @@ public class Recette {
 
     public void setIngredients(Set<Ingredient> ingredients) {
         this.ingredients = ingredients;
+    }
+
+    public Difficulty getDifficulty() {
+        return difficulty;
+    }
+
+    public void setDifficulty(Difficulty difficulty) {
+        this.difficulty = difficulty;
+    }
+
+    public Set<Category> getCategories() {
+        return categories;
+    }
+
+    public void setCategories(Set<Category> categories) {
+        this.categories = categories;
     }
 }
