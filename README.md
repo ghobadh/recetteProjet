@@ -1,1 +1,1 @@
-# C'est une recette projet pour JPA et Hibernate
+# C'est recette projet pour JPA et Hibernate
