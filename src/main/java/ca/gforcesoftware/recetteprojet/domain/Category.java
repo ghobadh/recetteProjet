@@ -8,6 +8,7 @@ import java.util.Set;
  * @author gavinhashemi on 2024-10-11
  */
 @Entity
+@Table(name="category")
 public class Category {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"  >
+<head>
+    <meta charset="UTF-8">
+    <title>Guacamole Recette </title>
+</head>
+<body>
+<h1 th:text="'Gauacomoli Recipe'"> VETS</h1>
+<table class="table table-striped">
+    <thead>
+    <tr>
+        <th style="width: 150px;">Id</th>
+        <th style="width: 150px;">Preparation Time</th>
+        <th style="width: 150px;">Description</th>
+        <th style="width: 150px;">Difficulty</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="recette : ${recettes}">
+        <td style="width: 150px;" th:text="${recette.id}">99</td>
+        <td style="width: 150px;" th:text="${recette.prepTime}"> JJJ</td>
+        <td style="width: 150px;" th:text="${recette.description}"> HHH </td>
+        <td style="width: 150px;" th:text="${recette.difficulty}">ddd</td>
+
+    </tr>
+    </tbody>
+</table>
+</body>
+</html>
