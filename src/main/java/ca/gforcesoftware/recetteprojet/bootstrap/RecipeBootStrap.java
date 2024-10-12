@@ -4,10 +4,12 @@ import ca.gforcesoftware.recetteprojet.domain.*;
 import ca.gforcesoftware.recetteprojet.repositories.CategoryRepository;
 import ca.gforcesoftware.recetteprojet.repositories.RecetteRepository;
 import ca.gforcesoftware.recetteprojet.repositories.UnitOfMeasureRepository;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -17,6 +19,7 @@ import java.util.Optional;
 /**
  * @author gavinhashemi on 2024-10-11
  */
+@Slf4j
 @Component
 public class RecipeBootStrap  implements ApplicationListener<ContextRefreshedEvent> {
     private final CategoryRepository categoryRepository;
@@ -100,9 +103,16 @@ public class RecipeBootStrap  implements ApplicationListener<ContextRefreshedEve
     }
 
 
+    /*
+    Although I did not see error of Lazy initiation in here, but I added
+    Transactional annotation from spring framework package (not jakarta package)
+    to wrap this methode so the lazy initialize issue does not happen
+     */
     @Override
+    @Transactional
     public void onApplicationEvent(ContextRefreshedEvent event) {
         recetteRepository.saveAll(getRecettes());
+        log.debug("Startup is running now");
     }
 
 

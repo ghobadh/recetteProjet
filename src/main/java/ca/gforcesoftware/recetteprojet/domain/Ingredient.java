@@ -8,7 +8,14 @@ import java.math.BigDecimal;
 /**
  * @author gavinhashemi on 2024-10-10
  */
+/*
+Becasue Recette is a bidirectional relationship object, when I used Lombok @Data , this causes the haschode implementation
+fails due to call itself again and again until it stack overflow. Using @EqualAndHashCode , and then I exclude "recette"
+variable in below, I
+explicitly remove this bidirectional when Lombok tries to implement hashcode() .
+ */
 @Data
+@EqualsAndHashCode(exclude = {"recette"})
 @Entity
 public class Ingredient {
 
@@ -35,8 +42,6 @@ public class Ingredient {
         this.unitOfMeasure = unitOfMeasure;
     }
 
-    public Ingredient() {
-
-    }
+    public Ingredient() {}
 
 }

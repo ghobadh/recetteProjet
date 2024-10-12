@@ -4,7 +4,6 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 /**
@@ -46,14 +45,20 @@ public class Recette {
      */
     @ManyToMany
     @JoinTable(name = "recette_category",
-            joinColumns = @JoinColumn(name ="recette_id"),
-            inverseJoinColumns = @JoinColumn(name ="category_id"))
+            joinColumns = @JoinColumn(name = "recette_id"),
+            inverseJoinColumns = @JoinColumn(name = "category_id"))
     private Set<Category> categories = new HashSet<>();
 
-    public Recette addIngredient(Ingredient ingredient){
+    public void setNotes(Notes notes) {
+        this.notes = notes;
+        notes.setRecette(this);
+    }
+
+    public Recette addIngredient(Ingredient ingredient) {
         ingredient.setRecette(this);
         this.ingredients.add(ingredient);
         return this;
     }
+
 
 }
