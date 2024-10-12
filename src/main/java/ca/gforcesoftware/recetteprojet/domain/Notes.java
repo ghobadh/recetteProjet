@@ -1,10 +1,12 @@
 package ca.gforcesoftware.recetteprojet.domain;
 
 import jakarta.persistence.*;
+import lombok.*;
 
 /**
  * @author gavinhashemi on 2024-10-10
  */
+@Data
 @Entity
 public class Notes {
 
@@ -16,22 +18,6 @@ public class Notes {
     private Recette recette;
     @Lob
     private String RecetteNotes;
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public Recette getRecette() {
-        return recette;
-    }
-
-    public void setRecette(Recette recette) {
-        this.recette = recette;
-    }
 
     public String getRecetteNotes() {
         return RecetteNotes;

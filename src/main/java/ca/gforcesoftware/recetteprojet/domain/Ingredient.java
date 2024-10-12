@@ -1,12 +1,14 @@
 package ca.gforcesoftware.recetteprojet.domain;
 
 import jakarta.persistence.*;
+import lombok.*;
 
 import java.math.BigDecimal;
 
 /**
  * @author gavinhashemi on 2024-10-10
  */
+@Data
 @Entity
 public class Ingredient {
 
@@ -37,43 +39,4 @@ public class Ingredient {
 
     }
 
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public BigDecimal getAmount() {
-        return amount;
-    }
-
-    public void setAmount(BigDecimal amoout) {
-        this.amount = amoout;
-    }
-
-    public Recette getRecette() {
-        return recette;
-    }
-
-    public void setRecette(Recette recette) {
-        this.recette = recette;
-    }
-
-    public UnitOfMeasure getUnitOfMeasure() {
-        return unitOfMeasure;
-    }
-
-    public void setUnitOfMeasure(UnitOfMeasure unitOfMeasure) {
-        this.unitOfMeasure = unitOfMeasure;
-    }
 }
