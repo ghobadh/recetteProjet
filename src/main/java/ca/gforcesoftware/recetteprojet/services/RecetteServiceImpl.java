@@ -22,7 +22,7 @@ public class RecetteServiceImpl implements RecetteService {
 
     @Override
     public Set<Recette> getRecette() {
-        //log.debug("getRecette is called in debug mode");
+        log.debug("getRecette is called in debug mode");
         Set<Recette> recettes = new HashSet<>();
         recetteRepository.findAll().forEach(recettes::add);
         return recettes;
