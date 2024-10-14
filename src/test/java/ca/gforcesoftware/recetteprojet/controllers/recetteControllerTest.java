@@ -82,4 +82,17 @@ public class recetteControllerTest {
                 .andExpect(view().name("recette"));
 
     }
+
+    @Test
+    public void testGetRecette() throws Exception {
+        Recette recette = new Recette();
+        recette.setId(1L);
+
+        MockMvc mockMvc = MockMvcBuilders.standaloneSetup(recetteController).build();
+        when(recetteService.findById(anyLong())).thenReturn(recette);
+
+        mockMvc.perform(get("/recette/show/1"))
+                .andExpect(status().isOk())
+                .andExpect(view().name("recette/show"));
+    }
 }
