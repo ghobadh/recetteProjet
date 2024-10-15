@@ -1,5 +1,7 @@
 package ca.gforcesoftware.recetteprojet.services;
 
+import ca.gforcesoftware.recetteprojet.converters.RecetteCommandToRecette;
+import ca.gforcesoftware.recetteprojet.converters.RecetteToRecetteCommand;
 import ca.gforcesoftware.recetteprojet.repositories.RecetteRepository;
 import ca.gforcesoftware.recetteprojet.domain.Recette;
 import org.junit.Before;
@@ -25,10 +27,16 @@ public class RecetteServiceImplTest {
     @Mock
     private RecetteRepository recetteRepository;
 
+    @Mock
+    private RecetteToRecetteCommand recetteToRecetteCommand;
+
+    @Mock
+    private RecetteCommandToRecette recetteCommandToRecette;
+
     @Before
     public void setUp() {
         MockitoAnnotations.initMocks(this);
-        recetteService = new RecetteServiceImpl(recetteRepository);
+        recetteService = new RecetteServiceImpl(recetteRepository, recetteCommandToRecette, recetteToRecetteCommand);
     }
 
     @Test

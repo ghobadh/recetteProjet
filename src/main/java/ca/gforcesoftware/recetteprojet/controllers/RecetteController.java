@@ -1,7 +1,6 @@
 package ca.gforcesoftware.recetteprojet.controllers;
 
 import ca.gforcesoftware.recetteprojet.services.RecetteService;
-import ca.gforcesoftware.recetteprojet.services.RecetteServiceImpl;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;

@@ -1,5 +1,8 @@
 package ca.gforcesoftware.recetteprojet.services;
 
+import ca.gforcesoftware.recetteprojet.commands.RecetteCommand;
+import ca.gforcesoftware.recetteprojet.converters.RecetteCommandToRecette;
+import ca.gforcesoftware.recetteprojet.converters.RecetteToRecetteCommand;
 import ca.gforcesoftware.recetteprojet.domain.Recette;
 import ca.gforcesoftware.recetteprojet.repositories.RecetteRepository;
 import lombok.extern.slf4j.Slf4j;
@@ -16,9 +19,13 @@ import java.util.Set;
 @Service
 public class RecetteServiceImpl implements RecetteService {
     private final RecetteRepository recetteRepository;
+    private final RecetteCommandToRecette recetteCommandToRecette;
+    private final RecetteToRecetteCommand recetteToRecetteCommand;
 
-    public RecetteServiceImpl(RecetteRepository recetteRepository) {
+    public RecetteServiceImpl(RecetteRepository recetteRepository, RecetteCommandToRecette recetteCommandToRecette, RecetteToRecetteCommand recetteToRecetteCommand) {
         this.recetteRepository = recetteRepository;
+        this.recetteCommandToRecette = recetteCommandToRecette;
+        this.recetteToRecetteCommand = recetteToRecetteCommand;
     }
 
     @Override
@@ -36,5 +43,13 @@ public class RecetteServiceImpl implements RecetteService {
             throw new RuntimeException("Recette not found");
         }
         return recette.get();
+    }
+
+    @Override
+    public RecetteCommand saveRecetteCommand(RecetteCommand recetteCommand) {
+        Recette recette = recetteCommandToRecette.convert(recetteCommand);
+        Recette savedRecette = recetteRepository.save(recette);
+        log.info("saved recette to database");
+        return recetteToRecetteCommand.convert(savedRecette);
     }
 }

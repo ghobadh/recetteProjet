@@ -9,7 +9,10 @@ import java.util.Set;
 /**
  * @author gavinhashemi on 2024-10-10
  */
-@Data
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
 @Entity
 public class Recette {
 

@@ -1,5 +1,6 @@
 package ca.gforcesoftware.recetteprojet.services;
 
+import ca.gforcesoftware.recetteprojet.commands.RecetteCommand;
 import ca.gforcesoftware.recetteprojet.domain.Recette;
 
 import java.util.Set;
@@ -10,4 +11,7 @@ import java.util.Set;
 public interface RecetteService {
     Set<Recette> getRecette();
     Recette findById(Long id);
+
+    RecetteCommand saveRecetteCommand(RecetteCommand recetteCommand);
+
 }
