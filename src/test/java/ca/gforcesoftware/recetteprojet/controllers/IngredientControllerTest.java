@@ -1,6 +1,8 @@
 package ca.gforcesoftware.recetteprojet.controllers;
 
+import ca.gforcesoftware.recetteprojet.commands.IngredientCommand;
 import ca.gforcesoftware.recetteprojet.commands.RecetteCommand;
+import ca.gforcesoftware.recetteprojet.services.IngredientService;
 import ca.gforcesoftware.recetteprojet.services.RecetteService;
 import org.junit.Before;
 import org.junit.Test;
@@ -22,6 +24,9 @@ public class IngredientControllerTest {
     @Mock
     RecetteService recetteService;
 
+    @Mock
+    IngredientService ingredientService;
+
     IngredientController ingredientController;
     MockMvc mockMvc;
 
@@ -29,7 +34,7 @@ public class IngredientControllerTest {
     public void setUp() throws Exception {
         MockitoAnnotations.initMocks(this);
 
-        ingredientController = new IngredientController(recetteService);
+        ingredientController = new IngredientController(recetteService, ingredientService);
         mockMvc = MockMvcBuilders.standaloneSetup(ingredientController).build();
 
     }
@@ -44,5 +49,17 @@ public class IngredientControllerTest {
                 .andExpect(view().name("/recette/ingredient/list"))
                 .andExpect(model().attributeExists("recette"));
 
+    }
+
+    @Test
+    public void testShowIngredient() throws Exception {
+        IngredientCommand ingredientCommand = new IngredientCommand();
+
+        when(ingredientService.findByRecetteIDAndIngredientId(anyLong(),anyLong())).thenReturn(ingredientCommand);
+
+        mockMvc.perform(get("/recette/1/ingredient/2/show" ))
+                .andExpect(status().isOk())
+                .andExpect(view().name("/recette/ingredient/show"))
+                .andExpect(model().attributeExists("ingredient"));
     }
 }
