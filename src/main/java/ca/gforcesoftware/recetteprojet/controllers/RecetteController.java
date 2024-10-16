@@ -35,6 +35,7 @@ public class RecetteController {
     Spring uses id by default and it can recognize {id} easily.
     I add @PathVariable to it found the recette based on the id which is clicked.
      */
+    @GetMapping
     @RequestMapping("/recette/{id}/show")
     public String showById(@PathVariable String id, Model model){
         log.info("showById method called");
@@ -43,6 +44,7 @@ public class RecetteController {
         return "recette/show";
     }
 
+    @GetMapping
     @RequestMapping("recette/nouvelle")
     public String newRecette(Model model){
         log.info("-----> Nouvelle Recette method called");
@@ -50,9 +52,10 @@ public class RecetteController {
         return "recette/recetteform";
     }
 
+    @GetMapping
     @RequestMapping("recette/{id}/update")
     public String updateRecette(@PathVariable String id, Model model){
-        log.info("-----> Update Recette method called");
+        log.debug("-----> Update Recette method called");
         model.addAttribute("recette", recetteService.findCommandById(parseLong(id)));
         return "recette/recetteform";
     }
@@ -61,10 +64,18 @@ public class RecetteController {
     @PostMapping
     @RequestMapping({"/recette/","recette"})
     public String saveOuUpdateRecette(@ModelAttribute RecetteCommand command){
-        log.info("-----> saveOuUpdateRecette method called");
+        log.debug("-----> saveOuUpdateRecette method called");
         RecetteCommand recetteCommand = recetteService.saveRecetteCommand(command);
 
-        return "redirect:/recette/" + recetteCommand.getId() +"/show";
+       // return "redirect:/recette/" + recetteCommand.getId() +"/show";
+        return "redirect:/";
+    }
+
+    @RequestMapping("recette/{id}/delete")
+    public String deleteRecette(@PathVariable String id){
+        log.debug("-----> delete Recette method called. Recette id: " + id);
+        recetteService.deleteById(parseLong(id));
+        return "redirect:/";
     }
 
 }

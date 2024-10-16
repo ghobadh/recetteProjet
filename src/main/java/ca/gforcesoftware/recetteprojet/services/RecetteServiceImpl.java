@@ -62,4 +62,11 @@ public class RecetteServiceImpl implements RecetteService {
         RecetteCommand recetteCommand = recetteToRecetteCommand.convert(findById(id));
         return recetteCommand;
     }
+
+    @Override
+    @Transactional
+    public void deleteById(Long l) {
+        recetteRepository.deleteById(l);
+
+    }
 }

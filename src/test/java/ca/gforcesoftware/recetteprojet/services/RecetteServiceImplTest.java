@@ -63,4 +63,14 @@ public class RecetteServiceImplTest {
         verify(recetteRepository, never()).findById(anyLong());
         verify(recetteRepository,times(1)).findAll();
     }
+
+    @Test
+    public void testDeleteById()  {
+        Long idToDelete = 1L;
+        recetteService.deleteById(idToDelete);
+
+        //there is no any when clause, because delete is has void return
+
+        verify(recetteRepository,times(1)).deleteById(anyLong());
+    }
 }
