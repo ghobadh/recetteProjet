@@ -40,7 +40,7 @@ public class RecetteCommandToRecette implements Converter<RecetteCommand, Recett
         recette.setPrepTime(source.getPrepTime());
         recette.setUrl(source.getUrl());
         recette.setServings(source.getServings());
-        recette.setPrepTime(source.getPrepTime());
+        recette.setSource(source.getSource());
         recette.setCookingTime(source.getCookTime());
         recette.setNotes(notesCommandToNotes.convert(source.getNotes()));
 

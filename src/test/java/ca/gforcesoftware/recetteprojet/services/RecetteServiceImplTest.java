@@ -51,14 +51,14 @@ public class RecetteServiceImplTest {
     }
 
     @Test
-    public void getRecette() {
+    public void getRecettes() {
         Recette recette = new Recette();
         HashSet<Recette> recetteData  = new HashSet<>();
         recetteData.add(recette);
 
         when(recetteRepository.findAll()).thenReturn(recetteData);
 
-        Set<Recette> recetteSet = recetteService.getRecette();
+        Set<Recette> recetteSet = recetteService.getRecettes();
         assertEquals(1, recetteSet.size());
         verify(recetteRepository, never()).findById(anyLong());
         verify(recetteRepository,times(1)).findAll();

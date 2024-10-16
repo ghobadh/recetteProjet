@@ -21,7 +21,8 @@ public class Notes {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @OneToOne
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "recette_id")
     private Recette recette;
     @Lob
     private String RecetteNotes;

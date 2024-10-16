@@ -9,6 +9,10 @@ import java.util.Set;
 /**
  * @author gavinhashemi on 2024-10-10
  */
+/*
+I have to change @Data to these lombok annotation the reason it the toString() method in
+@Data was cause of issue since this is a bidirectional class file
+ */
 @Getter
 @Setter
 @NoArgsConstructor
@@ -40,6 +44,7 @@ public class Recette {
     private Byte[] image;
 
     @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "notes_id")
     private Notes notes;
 
     /*
@@ -53,8 +58,11 @@ public class Recette {
     private Set<Category> categories = new HashSet<>();
 
     public void setNotes(Notes notes) {
-        this.notes = notes;
-        notes.setRecette(this);
+        if (notes != null) {
+            this.notes = notes;
+            notes.setRecette(this);
+        }
+
     }
 
     public Recette addIngredient(Ingredient ingredient) {

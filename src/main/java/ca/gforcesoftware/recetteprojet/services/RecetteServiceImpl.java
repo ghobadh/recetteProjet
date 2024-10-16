@@ -7,6 +7,7 @@ import ca.gforcesoftware.recetteprojet.domain.Recette;
 import ca.gforcesoftware.recetteprojet.repositories.RecetteRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.HashSet;
 import java.util.Optional;
@@ -29,7 +30,7 @@ public class RecetteServiceImpl implements RecetteService {
     }
 
     @Override
-    public Set<Recette> getRecette() {
+    public Set<Recette> getRecettes() {
         log.debug("getRecette is called in debug mode");
         Set<Recette> recettes = new HashSet<>();
         recetteRepository.findAll().forEach(recettes::add);
@@ -45,11 +46,20 @@ public class RecetteServiceImpl implements RecetteService {
         return recette.get();
     }
 
+    @Transactional
     @Override
     public RecetteCommand saveRecetteCommand(RecetteCommand recetteCommand) {
         Recette recette = recetteCommandToRecette.convert(recetteCommand);
+        log.info("recette ID: " + recette.getId());
         Recette savedRecette = recetteRepository.save(recette);
-        log.info("saved recette to database");
+        log.info(" --- saved recette to database ----");
         return recetteToRecetteCommand.convert(savedRecette);
+    }
+
+    @Override
+    @Transactional
+    public RecetteCommand findCommandById(Long id) {
+        RecetteCommand recetteCommand = recetteToRecetteCommand.convert(findById(id));
+        return recetteCommand;
     }
 }

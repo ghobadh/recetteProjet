@@ -1,11 +1,12 @@
 package ca.gforcesoftware.recetteprojet.controllers;
 
+import ca.gforcesoftware.recetteprojet.commands.RecetteCommand;
+import ca.gforcesoftware.recetteprojet.domain.Recette;
 import ca.gforcesoftware.recetteprojet.services.RecetteService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 import static java.lang.Long.parseLong;
 
@@ -22,23 +23,48 @@ public class RecetteController {
         this.recetteService = recetteService;
     }
 
-    @RequestMapping({"/recette","/recette.html"})
+   /* @RequestMapping({"recette.html", "recette"})
     public String recetteMake(Model model) {
-        log.info("recetteMake method called");
+        log.info("----> recetteMake method called");
             model.addAttribute("recettes", recetteService.getRecette());
 
         return "recette";
-    }
+    } */
 
     /*
     Spring uses id by default and it can recognize {id} easily.
     I add @PathVariable to it found the recette based on the id which is clicked.
      */
-    @RequestMapping("/recette/show/{id}")
+    @RequestMapping("/recette/{id}/show")
     public String showById(@PathVariable String id, Model model){
         log.info("showById method called");
         model.addAttribute("recette", recetteService.findById(parseLong(id)));
 
         return "recette/show";
     }
+
+    @RequestMapping("recette/nouvelle")
+    public String newRecette(Model model){
+        log.info("-----> Nouvelle Recette method called");
+        model.addAttribute("recette", new RecetteCommand());
+        return "recette/recetteform";
+    }
+
+    @RequestMapping("recette/{id}/update")
+    public String updateRecette(@PathVariable String id, Model model){
+        log.info("-----> Update Recette method called");
+        model.addAttribute("recette", recetteService.findCommandById(parseLong(id)));
+        return "recette/recetteform";
+    }
+
+    //@RequestMapping(name = "recette", method = RequestMethod.POST)// <-- Old method
+    @PostMapping
+    @RequestMapping({"/recette/","recette"})
+    public String saveOuUpdateRecette(@ModelAttribute RecetteCommand command){
+        log.info("-----> saveOuUpdateRecette method called");
+        RecetteCommand recetteCommand = recetteService.saveRecetteCommand(command);
+
+        return "redirect:/recette/" + recetteCommand.getId() +"/show";
+    }
+
 }

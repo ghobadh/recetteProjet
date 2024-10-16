@@ -9,9 +9,10 @@ import java.util.Set;
  * @author gavinhashemi on 2024-10-11
  */
 public interface RecetteService {
-    Set<Recette> getRecette();
+    Set<Recette> getRecettes();
     Recette findById(Long id);
 
     RecetteCommand saveRecetteCommand(RecetteCommand recetteCommand);
 
+    RecetteCommand findCommandById(Long id);
 }

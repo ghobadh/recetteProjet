@@ -5,16 +5,17 @@
   <title>Show Recipe</title>
 
 
-  <script src="/webjars/jquery/3.7.1/jquery.min.js"></script>
   <!-- Latest compiled and minified CSS -->
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/5.3.3/css/bootstrap.min.css"
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
         integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous"
-        th:href="@{/webjars/bootstrap/5.3.3/css/bootstrap.min.css}">
+        th:href="@{/webjars/bootstrap/3.3.7-1/css/bootstrap.min.css}">
 
- <!-- Latest compiled and minified JavaScript -->
-  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/5.3.3/js/bootstrap.min.js"
+  <script src="/webjars/jquery/1.11.1/jquery.min.js"></script>
+
+  <!-- Latest compiled and minified JavaScript -->
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"
           integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa"
-          crossorigin="anonymous" th:src="@{/webjars/bootstrap/5.3.3/js/bootstrap.min.js}"></script>
+          crossorigin="anonymous" th:src="@{/webjars/bootstrap/3.3.7-1/js/bootstrap.min.js}"></script>
 </head>
 <body>
 <div class="container-fluid" style="margin-top: 20px">
@@ -35,8 +36,7 @@
                 <ul>
                   <li th:remove="all">cat one</li>
                   <li th:remove="all">cat two</li>
-                  <!--/*@thymesVar id="recette" type="ca.gforcesoftware.recetteprojet.domain.Recette"*/-->
-                  <li th:each="category : ${recette.categories}" th:text="${category.getDescription()}">cat three</li>
+                     <li th:each="category : ${recette.categories}" th:text="${category.getDescription()}">cat three</li>
                 </ul>
               </div>
             </div>
@@ -95,9 +95,11 @@
                   <li th:remove="all">1 Cup of milk</li>
                   <li th:remove="all">1 Teaspoon of chocolate</li>
                   <!-- This is how I put multiple variable data into one row of table -->
-                  <li th:each="ingredient : ${recette.ingredients}" th:text="${(ingredient.getAmount()) +
-                            ' ' + ingredient.unitOfMeasure.getUom() +
-                            ' - ' + ingredient.getDescription()}">1 Teaspoon of Sugar</li>
+                  <li th:each="ingredient : ${recette.ingredients}"
+                      th:text="${(ingredient.getAmount() +
+
+                                    ' - ' + ingredient.getDescription())}">1 teaspoon of sugar
+                  </li>
                 </ul>
               </div>
             </div>
