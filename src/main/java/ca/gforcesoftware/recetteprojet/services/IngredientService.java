@@ -10,4 +10,6 @@ public interface IngredientService {
     Recette getRecetteById(Long id);
 
     IngredientCommand findByRecetteIDAndIngredientId(long recetteId, long ingredientId);
+
+    IngredientCommand saveIngredientCommand(IngredientCommand command);
 }
