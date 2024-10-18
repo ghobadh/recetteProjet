@@ -27,6 +27,10 @@
             <!--/*@thymesVar id="recette" type="ca.gforcesoftware.recetteprojet.domain.Recette"*/-->
             <h1 class="panel-title" th:text="${recette.description}">Recipe Description Here!</h1>
           </div>
+          <div class="col-md-1">
+            <a class="btn btn-default" href="#"
+               th:href="@{'/recette/' + ${recette.id} + '/image'}" role="button">Change Image</a>
+          </div>
           <div class="panel-body">
             <div class="row">
               <div class="col-md-3">
@@ -38,6 +42,11 @@
                   <li th:remove="all">cat two</li>
                      <li th:each="category : ${recette.categories}" th:text="${category.getDescription()}">cat three</li>
                 </ul>
+              </div>
+              <div class="col-md-6">
+                <img src="../../static/images/IMG_1997.jpeg"
+                     th:src="@{'/recette/' + ${recette.id} + '/recetteimage'}"
+                     width="200" height="200">
               </div>
             </div>
             <div class="row">
