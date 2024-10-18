@@ -1,6 +1,8 @@
 package ca.gforcesoftware.recetteprojet.controllers;
 
 import ca.gforcesoftware.recetteprojet.commands.IngredientCommand;
+import ca.gforcesoftware.recetteprojet.commands.RecetteCommand;
+import ca.gforcesoftware.recetteprojet.commands.UnitOfMeasureCommand;
 import ca.gforcesoftware.recetteprojet.converters.IngredientToIngredientCommand;
 import ca.gforcesoftware.recetteprojet.domain.UnitOfMeasure;
 import ca.gforcesoftware.recetteprojet.services.IngredientService;
@@ -49,6 +51,25 @@ public class IngredientController {
     @RequestMapping("recette/{recetteId}/ingredient/{id}/update")
     public String updateIngredient(@PathVariable Long recetteId, @PathVariable Long id, Model model) {
         model.addAttribute("ingredient", ingredientService.findByRecetteIDAndIngredientId(recetteId, id));
+        model.addAttribute("uomList", unitOfMeasureService.listAllUoms());
+        return "/recette/ingredient/ingredientform";
+    }
+
+
+    @GetMapping
+    @RequestMapping("recette/{recetteId}/ingredient/new")
+    public String updateIngredient(@PathVariable Long recetteId, Model model) {
+        RecetteCommand recetteCommand = recetteService.findCommandById(recetteId);
+        if(recetteCommand == null) {
+            log.error("Ne trouve pas cette recette avec id {}" , recetteId);
+            return "redirect:/recette/{recetteId}/ingredients";
+        }
+        IngredientCommand ingredientCommand = new IngredientCommand();
+        ingredientCommand.setRecetteId(recetteCommand.getId());
+        model.addAttribute("ingredient", ingredientCommand);
+
+        //init uom
+        ingredientCommand.setUomCommand(new UnitOfMeasureCommand());
         model.addAttribute("uomList", unitOfMeasureService.listAllUoms());
         return "/recette/ingredient/ingredientform";
     }

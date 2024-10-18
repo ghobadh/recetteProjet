@@ -14,7 +14,8 @@ fails due to call itself again and again until it stack overflow. Using @EqualAn
 variable in below, I
 explicitly remove this bidirectional when Lombok tries to implement hashcode() .
  */
-@Data
+@Getter
+@Setter
 @EqualsAndHashCode(exclude = {"recette"})
 @Entity
 public class Ingredient {
