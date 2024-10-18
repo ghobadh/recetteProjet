@@ -71,5 +71,9 @@ public class Recette {
         return this;
     }
 
+    public Recette deleteIngredient(Long ingredientId) {
+        this.ingredients.remove(ingredientId);
+        return this;
+    }
 
 }

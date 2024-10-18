@@ -99,6 +99,42 @@ public class IngredientServiceImplTest {
         verify(recetteRepository,times(1)).findById(anyLong());
         verify(recetteRepository,times(1)).save(any());
 
+    }
+
+    @Test
+    public void testDeleteIngredient() {
+        // Since delete ingredient does return void , I try to check wethere the recette save is working fine or not.
+
+        Recette recette = new Recette();
+        recette.setId(9L);
+
+        Ingredient ingredient1 = new Ingredient();
+        ingredient1.setId(1L);
+        recette.addIngredient(ingredient1);
+        ingredient1.setRecette(recette);
+
+        Ingredient ingredient2 = new Ingredient();
+        ingredient2.setId(2L);
+        recette.addIngredient(ingredient2);
+        ingredient2.setRecette(recette);
+
+        Ingredient ingredient3 = new Ingredient();
+        ingredient3.setId(3L);
+        recette.addIngredient(ingredient3);
+        ingredient3.setRecette(recette);
+
+
+        Optional<Recette> recetteOptional = Optional.of(recette);
+        when(recetteRepository.findById(anyLong())).thenReturn(recetteOptional);
+
+        ingredientService.deleteById(9L,1L);
+
+        verify(recetteRepository,times(1)).findById(anyLong());
+        //Note this one , I want to select any() as recette object
+        verify(recetteRepository,times(1)).save(any(Recette.class));
+        //The line below does not work and it raise a mockito misusing exception!!
+        //verify(ingredientService,times(1)).deleteById(anyLong(),anyLong());
+
 
 
     }

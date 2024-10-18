@@ -13,6 +13,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import static java.lang.Long.parseLong;
+
 /**
  * @author gavinhashemi on 2024-10-15
  */
@@ -85,5 +87,16 @@ public class IngredientController {
 
         return "redirect:/recette/" + savedCommand.getRecetteId() + "/ingredient/" + savedCommand.getId() +"/show";
     }
+
+
+    @GetMapping("recette/{recetteId}/ingredient/{id}/delete")
+    public String deleteIngredient(@PathVariable String recetteId, @PathVariable String id){
+        log.debug("-----> delete Recette method called. Recette id {} and ingredient id {}: "
+                , recetteId, id);
+        ingredientService.deleteById(parseLong(recetteId), parseLong(id));
+
+        return "redirect:/recette/"+ recetteId +"/ingredients";
+    }
+
 
 }

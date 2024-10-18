@@ -45,7 +45,7 @@ public class IngredientServiceImpl implements IngredientService {
     }
 
     @Override
-    public IngredientCommand findByRecetteIDAndIngredientId(long recetteId, long ingredientId) {
+    public IngredientCommand findByRecetteIDAndIngredientId(Long recetteId, Long ingredientId) {
         Optional<Recette> recette = recetteRepository.findById(recetteId);
 
         if (!recette.isPresent()) {
@@ -56,7 +56,7 @@ public class IngredientServiceImpl implements IngredientService {
 
         Optional<IngredientCommand> ingredientOptionalCommand = rec.getIngredients().stream()
                 .filter(ingredient -> ingredient.getId().equals(ingredientId))
-                .map (i ->  ingredientToIngredientCommand.convert(i))
+                .map(i -> ingredientToIngredientCommand.convert(i))
                 .findFirst();
 
         if (!ingredientOptionalCommand.isPresent()) {
@@ -72,10 +72,10 @@ public class IngredientServiceImpl implements IngredientService {
     public IngredientCommand saveIngredientCommand(IngredientCommand command) {
         Optional<Recette> recipeOptional = recetteRepository.findById(command.getRecetteId());
 
-        if(!recipeOptional.isPresent()){
+        if (!recipeOptional.isPresent()) {
 
             //todo toss error if not found!
-            log.error("Ne trouve pas cette recette avec id: {} " , command.getRecetteId());
+            log.error("Ne trouve pas cette recette avec id: {} ", command.getRecetteId());
             return new IngredientCommand();
         } else {
             Recette recipe = recipeOptional.get();
@@ -86,7 +86,7 @@ public class IngredientServiceImpl implements IngredientService {
                     .filter(ingredient -> ingredient.getId().equals(command.getId()))
                     .findFirst();
 
-            if(ingredientOptional.isPresent()){
+            if (ingredientOptional.isPresent()) {
                 Ingredient ingredientFound = ingredientOptional.get();
                 ingredientFound.setDescription(command.getDescription());
                 ingredientFound.setAmount(command.getAmount());
@@ -103,7 +103,7 @@ public class IngredientServiceImpl implements IngredientService {
 
             Recette savedRecipe = recetteRepository.save(recipe);
 
-            Optional<Ingredient> savedIngredientOptional =savedRecipe
+            Optional<Ingredient> savedIngredientOptional = savedRecipe
                     .getIngredients()
                     .stream()
                     .filter(recipeIngredients -> recipeIngredients.getId().equals(command.getId()))
@@ -119,9 +119,32 @@ public class IngredientServiceImpl implements IngredientService {
                         .findFirst();
 
             }
-                return ingredientToIngredientCommand.convert(savedIngredientOptional.get());
+            return ingredientToIngredientCommand.convert(savedIngredientOptional.get());
         }
 
     }
 
+    @Override
+    public void deleteById(Long recetteId, Long ingredientId) {
+        Optional<Recette> optionalRecette = recetteRepository.findById(recetteId);
+
+        if (optionalRecette.isPresent()) {
+            Recette recette = optionalRecette.get();
+            Optional<Ingredient> optionalIngredient = optionalRecette
+                    .get()
+                    .getIngredients()
+                    .stream()
+                    .filter(i -> i.getId().equals(ingredientId))
+                    .findFirst();
+            if (optionalIngredient.isPresent()) {
+                Ingredient ingredient = optionalIngredient.get();
+                ingredient.setRecette(null);
+                recette.getIngredients().remove(optionalIngredient.get());
+                recetteRepository.save(recette);
+            }
+
+        } else {
+            log.error("Could not find recette with id {}", recetteId);
+        }
+    }
 }

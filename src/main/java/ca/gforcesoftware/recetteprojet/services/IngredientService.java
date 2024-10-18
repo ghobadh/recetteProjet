@@ -9,7 +9,9 @@ import ca.gforcesoftware.recetteprojet.domain.Recette;
 public interface IngredientService {
     Recette getRecetteById(Long id);
 
-    IngredientCommand findByRecetteIDAndIngredientId(long recetteId, long ingredientId);
+    IngredientCommand findByRecetteIDAndIngredientId(Long recetteId, Long ingredientId);
 
     IngredientCommand saveIngredientCommand(IngredientCommand command);
+
+    void deleteById(Long recetteId, Long ingredientId);
 }

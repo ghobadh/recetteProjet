@@ -63,14 +63,18 @@
                                 </div>
                                 <div class="col-md-3 form-group">
                                     <label>Cooktime:</label>
-                                    <input type="text" class="form-control" th:field="*{cookTime}"/>
+                                    <input type="text" class="form-control" th:field="*{cookingTime}"/>
                                 </div>
                                 <div class="col-md-3 form-group">
+                                    <!-- /* Since Difficulty is an enum, I used th:field to get it and display it. the T() is return  'type' */-->
                                     <label>Difficulty:</label>
-                                    <select class="form-control">
-                                        <option>Easy</option>
+                                    <select class="form-control" th:field="*{difficulty}">
+                                        <option th:each="difficultyValue : ${T(ca.gforcesoftware.recetteprojet.domain.Difficulty).values()}"
+                                           th:value="${difficultyValue.name()}"
+                                        th:text="${difficultyValue.getDescription()}">difficulty name</option>
+                                        <!--option>Easy</option>
                                         <option>Medium</option>
-                                        <option>Hard</option>
+                                        <option>Hard</option -->
                                     </select>
                                 </div>
                             </div>
@@ -124,7 +128,7 @@
                         <div class="panel-body">
                             <div class="row">
                                 <div class="col-md-12 form-group">
-                                    <textarea class="form-control" rows="3" th:field="*{direction}"></textarea></div>
+                                    <textarea class="form-control" rows="3" th:field="*{directions}"></textarea></div>
                             </div>
                         </div>
                     </div>
