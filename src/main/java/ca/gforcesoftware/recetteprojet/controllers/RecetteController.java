@@ -5,6 +5,7 @@ import ca.gforcesoftware.recetteprojet.domain.Recette;
 import ca.gforcesoftware.recetteprojet.exceptions.BadRequestException;
 import ca.gforcesoftware.recetteprojet.exceptions.NotFoundException;
 import ca.gforcesoftware.recetteprojet.services.RecetteService;
+import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
@@ -73,9 +74,16 @@ public class RecetteController {
     }
 
     //@RequestMapping(name = "recette", method = RequestMethod.POST)// <-- Old method
+
+
+    //for validation I changed
+    //from
+    //saveOuUpdateRecette( @ModelAttribute RecetteCommand command)
+    //to
+    //saveOuUpdateRecette(@Valid @ModelAttribute("recette") RecetteCommand command)
     @PostMapping
     @RequestMapping({"/recette/","recette"})
-    public String saveOuUpdateRecette(@ModelAttribute RecetteCommand command){
+    public String saveOuUpdateRecette(@Valid @ModelAttribute("recette") RecetteCommand command){
         log.debug("-----> saveOuUpdateRecette method called");
         RecetteCommand recetteCommand = recetteService.saveRecetteCommand(command);
 
