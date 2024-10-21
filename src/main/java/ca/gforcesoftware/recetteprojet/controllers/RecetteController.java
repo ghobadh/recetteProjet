@@ -90,10 +90,18 @@ public class RecetteController {
      */
     @ResponseStatus(HttpStatus.NOT_FOUND)
     @ExceptionHandler(NotFoundException.class)
-    public ModelAndView handleNotFound(){
-        log.error("-----> handleNotFound method called");
+    public ModelAndView handleNotFound( Exception ex){
+        log.error("-----> handleNotFound method called." + ex.getMessage());
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.setViewName("404error");
+        /*
+        now I can add  <p th:text="${exception.getMessage()}"></p>
+        so I can pass id to the error message
+         */
+        modelAndView.addObject("exception", ex);
+
+
+
         return modelAndView;
     }
 

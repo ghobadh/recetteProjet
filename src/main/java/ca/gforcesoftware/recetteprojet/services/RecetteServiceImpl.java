@@ -44,7 +44,7 @@ public class RecetteServiceImpl implements RecetteService {
         Optional<Recette> recette= recetteRepository.findById(id);
         if(!recette.isPresent()){
            // throw new RuntimeException("Recette not found");
-            throw new NotFoundException("Recette id not found");
+            throw new NotFoundException("Recette id not found for given id: " + id.toString());
         }
         return recette.get();
     }
