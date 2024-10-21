@@ -2,6 +2,7 @@ package ca.gforcesoftware.recetteprojet.controllers;
 
 import ca.gforcesoftware.recetteprojet.commands.RecetteCommand;
 import ca.gforcesoftware.recetteprojet.domain.Recette;
+import ca.gforcesoftware.recetteprojet.exceptions.BadRequestException;
 import ca.gforcesoftware.recetteprojet.exceptions.NotFoundException;
 import ca.gforcesoftware.recetteprojet.services.RecetteService;
 import org.junit.Before;
@@ -99,6 +100,14 @@ public class RecetteControllerTest {
                 .andExpect(view().name("redirect:/"));
 
         verify(recipeService, times(1)).deleteById(anyLong());
+    }
+
+    @Test
+    public void testRecetteBadRequest() throws Exception {
+
+        mockMvc.perform(get("/recette/1RR/show"))
+                .andExpect(status().isBadRequest())
+                .andExpect(view().name("400error"));
     }
 
 

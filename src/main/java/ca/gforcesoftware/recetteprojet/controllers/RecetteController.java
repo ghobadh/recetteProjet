@@ -2,6 +2,7 @@ package ca.gforcesoftware.recetteprojet.controllers;
 
 import ca.gforcesoftware.recetteprojet.commands.RecetteCommand;
 import ca.gforcesoftware.recetteprojet.domain.Recette;
+import ca.gforcesoftware.recetteprojet.exceptions.BadRequestException;
 import ca.gforcesoftware.recetteprojet.exceptions.NotFoundException;
 import ca.gforcesoftware.recetteprojet.services.RecetteService;
 import lombok.extern.slf4j.Slf4j;
@@ -45,7 +46,13 @@ public class RecetteController {
     @GetMapping("/recette/{id}/show")
     public String showById(@PathVariable String id, Model model){
         log.debug("showById method called");
-        model.addAttribute("recette", recetteService.findById(parseLong(id)));
+        try {
+           Long longValue = parseLong(id);
+            model.addAttribute("recette", recetteService.findById(longValue));
+
+        } catch (NumberFormatException e) {
+            throw new BadRequestException("The id '" + id + "' is not a number");
+        }
 
         return "recette/show";
     }
@@ -99,10 +106,22 @@ public class RecetteController {
         so I can pass id to the error message
          */
         modelAndView.addObject("exception", ex);
-
-
-
         return modelAndView;
     }
+
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(BadRequestException.class)
+    public ModelAndView handleBadRequest( Exception ex){
+        log.error("-----> handleBadRequest method called." + ex.getMessage());
+        ModelAndView modelAndView = new ModelAndView();
+        modelAndView.setViewName("400error");
+        /*
+        now I can add  <p th:text="${exception.getMessage()}"></p>
+        so I can pass id to the error message
+         */
+        modelAndView.addObject("exception", ex);
+        return modelAndView;
+    }
+
 
 }
