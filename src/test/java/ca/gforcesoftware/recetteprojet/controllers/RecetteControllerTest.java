@@ -2,6 +2,7 @@ package ca.gforcesoftware.recetteprojet.controllers;
 
 import ca.gforcesoftware.recetteprojet.commands.RecetteCommand;
 import ca.gforcesoftware.recetteprojet.domain.Recette;
+import ca.gforcesoftware.recetteprojet.exceptions.NotFoundException;
 import ca.gforcesoftware.recetteprojet.services.RecetteService;
 import org.junit.Before;
 import org.junit.Ignore;
@@ -98,5 +99,21 @@ public class RecetteControllerTest {
                 .andExpect(view().name("redirect:/"));
 
         verify(recipeService, times(1)).deleteById(anyLong());
+    }
+
+
+    /*
+    Because I added @ResponseStatus in the NotFoundException class file,
+    It is trigger in here when explicitly I throw an exception
+     */
+    @Test
+    public void testRecetteNotFound() throws Exception {
+        Recette recette = new Recette();
+        recette.setId(1L);
+
+        when(recipeService.findById(anyLong())).thenThrow(NotFoundException.class);
+
+        mockMvc.perform(get("/recette/1/show"))
+                .andExpect(status().isNotFound());
     }
 }

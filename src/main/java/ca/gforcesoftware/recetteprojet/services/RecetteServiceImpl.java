@@ -5,7 +5,9 @@ import ca.gforcesoftware.recetteprojet.converters.RecetteCommandToRecette;
 import ca.gforcesoftware.recetteprojet.converters.RecetteToRecetteCommand;
 import ca.gforcesoftware.recetteprojet.domain.Recette;
 import ca.gforcesoftware.recetteprojet.repositories.RecetteRepository;
+import ca.gforcesoftware.recetteprojet.exceptions.NotFoundException;
 import lombok.extern.slf4j.Slf4j;
+
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -41,7 +43,8 @@ public class RecetteServiceImpl implements RecetteService {
     public Recette findById(Long id) {
         Optional<Recette> recette= recetteRepository.findById(id);
         if(!recette.isPresent()){
-            throw new RuntimeException("Recette not found");
+           // throw new RuntimeException("Recette not found");
+            throw new NotFoundException("Recette id not found");
         }
         return recette.get();
     }

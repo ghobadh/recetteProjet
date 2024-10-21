@@ -2,6 +2,7 @@ package ca.gforcesoftware.recetteprojet.services;
 
 import ca.gforcesoftware.recetteprojet.converters.RecetteCommandToRecette;
 import ca.gforcesoftware.recetteprojet.converters.RecetteToRecetteCommand;
+import ca.gforcesoftware.recetteprojet.exceptions.NotFoundException;
 import ca.gforcesoftware.recetteprojet.repositories.RecetteRepository;
 import ca.gforcesoftware.recetteprojet.domain.Recette;
 import org.junit.Before;
@@ -37,6 +38,15 @@ public class RecetteServiceImplTest {
     public void setUp() {
         MockitoAnnotations.initMocks(this);
         recetteService = new RecetteServiceImpl(recetteRepository, recetteCommandToRecette, recetteToRecetteCommand);
+    }
+
+    @Test(expected = NotFoundException.class)
+    public void getRecetteByIdTestNotFoundException() throws Exception {
+        Optional<Recette> recette = Optional.empty();
+        when(recetteRepository.findById(1L)).thenReturn(recette);
+        Recette recetteReturned = recetteService.findById(1L);
+
+        // should be failed
     }
 
     @Test
