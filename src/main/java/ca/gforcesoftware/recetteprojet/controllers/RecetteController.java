@@ -2,11 +2,14 @@ package ca.gforcesoftware.recetteprojet.controllers;
 
 import ca.gforcesoftware.recetteprojet.commands.RecetteCommand;
 import ca.gforcesoftware.recetteprojet.domain.Recette;
+import ca.gforcesoftware.recetteprojet.exceptions.NotFoundException;
 import ca.gforcesoftware.recetteprojet.services.RecetteService;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.ModelAndView;
 
 import static java.lang.Long.parseLong;
 
@@ -78,6 +81,20 @@ public class RecetteController {
         log.debug("-----> delete Recette method called. Recette id: " + id);
         recetteService.deleteById(parseLong(id));
         return "redirect:/";
+    }
+
+    /*
+    Although I put this @ExceptionHandler for handling the exception, I need to add @ResponseStatus also
+    to orderly works. If I would not add @ResponseStatus in here then Test testRecetteException would return 200 instead
+    of 404 because application was able to render a file and show it .
+     */
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    @ExceptionHandler(NotFoundException.class)
+    public ModelAndView handleNotFound(){
+        log.error("-----> handleNotFound method called");
+        ModelAndView modelAndView = new ModelAndView();
+        modelAndView.setViewName("404error");
+        return modelAndView;
     }
 
 }
