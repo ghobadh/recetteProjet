@@ -23,7 +23,8 @@ public class ExceptionHandlerController {
     Because we put outside the controller class in the test classes I need to add
     .setControllerAdvice(new ExceptionHandlerController()) in @Before setup() methoed when I create the MockMvc
 
-    Since the error handling is out side of RecetteController,  I used it in image controller now.
+    Since the error handling is outside of RecetteController,  I used it in image controller now. Of course,
+    I have to add try/catch in the checking id
      */
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(BadRequestException.class)
