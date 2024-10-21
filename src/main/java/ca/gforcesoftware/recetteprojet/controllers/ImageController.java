@@ -1,6 +1,7 @@
 package ca.gforcesoftware.recetteprojet.controllers;
 
 import ca.gforcesoftware.recetteprojet.commands.RecetteCommand;
+import ca.gforcesoftware.recetteprojet.exceptions.BadRequestException;
 import ca.gforcesoftware.recetteprojet.services.ImageService;
 import ca.gforcesoftware.recetteprojet.services.RecetteService;
 import jakarta.servlet.http.HttpServletResponse;
@@ -45,8 +46,14 @@ public class ImageController {
     Note that the recetteimage is in show.html of recette and we render it whenever the page is refreshed
      */
     @GetMapping("/recette/{id}/recetteimage")
-    public void renderRecetteImageFromDB(@PathVariable Long id, HttpServletResponse response)  throws IOException {
-        RecetteCommand  recetteCommand = recetteService.findCommandById(id);
+    public void renderRecetteImageFromDB(@PathVariable String id, HttpServletResponse response)  throws IOException {
+        Long longId;
+        try {
+            longId = Long.parseLong(id);
+        } catch (NumberFormatException ex){
+            throw new BadRequestException(ex.getMessage());
+        }
+        RecetteCommand  recetteCommand = recetteService.findCommandById(longId);
         if (recetteCommand != null) {
             byte[] byteImage = new byte[recetteCommand.getImage().length];
 

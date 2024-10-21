@@ -109,19 +109,7 @@ public class RecetteController {
         return modelAndView;
     }
 
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    @ExceptionHandler(BadRequestException.class)
-    public ModelAndView handleBadRequest( Exception ex){
-        log.error("-----> handleBadRequest method called." + ex.getMessage());
-        ModelAndView modelAndView = new ModelAndView();
-        modelAndView.setViewName("400error");
-        /*
-        now I can add  <p th:text="${exception.getMessage()}"></p>
-        so I can pass id to the error message
-         */
-        modelAndView.addObject("exception", ex);
-        return modelAndView;
-    }
+
 
 
 }

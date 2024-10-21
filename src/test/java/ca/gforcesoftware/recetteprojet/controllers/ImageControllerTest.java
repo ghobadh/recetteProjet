@@ -1,6 +1,7 @@
 package ca.gforcesoftware.recetteprojet.controllers;
 
 import ca.gforcesoftware.recetteprojet.commands.RecetteCommand;
+import ca.gforcesoftware.recetteprojet.exceptions.BadRequestException;
 import ca.gforcesoftware.recetteprojet.services.ImageService;
 import ca.gforcesoftware.recetteprojet.services.RecetteService;
 import org.junit.Before;
@@ -40,7 +41,9 @@ public class ImageControllerTest {
         MockitoAnnotations.openMocks(this);
 
         imageController = new ImageController(imageService,recetteService);
-        mockMvc = MockMvcBuilders.standaloneSetup(imageController).build();
+        mockMvc = MockMvcBuilders.standaloneSetup(imageController)
+                .setControllerAdvice(new ExceptionHandlerController())
+                .build();
     }
 
     @Test
@@ -92,5 +95,13 @@ public class ImageControllerTest {
        byte[] responseByte = response.getContentAsByteArray();
        assertEquals(s.getBytes().length, responseByte.length);
 
+    }
+
+
+    @Test
+    public void testHandleException() throws Exception {
+        mockMvc.perform(get("/recette/6e/recetteimage"))
+                .andExpect(status().isBadRequest())
+                .andExpect(view().name("400error"));
     }
 }
