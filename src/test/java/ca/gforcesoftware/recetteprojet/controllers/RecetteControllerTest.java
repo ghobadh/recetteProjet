@@ -1,9 +1,14 @@
 package ca.gforcesoftware.recetteprojet.controllers;
 
+import ca.gforcesoftware.recetteprojet.commands.NotesCommand;
 import ca.gforcesoftware.recetteprojet.commands.RecetteCommand;
+import ca.gforcesoftware.recetteprojet.converters.*;
+import ca.gforcesoftware.recetteprojet.domain.Category;
+import ca.gforcesoftware.recetteprojet.domain.Notes;
 import ca.gforcesoftware.recetteprojet.domain.Recette;
 import ca.gforcesoftware.recetteprojet.exceptions.BadRequestException;
 import ca.gforcesoftware.recetteprojet.exceptions.NotFoundException;
+import ca.gforcesoftware.recetteprojet.repositories.RecetteRepository;
 import ca.gforcesoftware.recetteprojet.services.RecetteService;
 import org.junit.Before;
 import org.junit.Ignore;
@@ -12,9 +17,13 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.http.MediaType;
+import org.springframework.stereotype.Repository;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
+
+import java.util.HashSet;
+import java.util.Set;
 
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -68,8 +77,13 @@ public class RecetteControllerTest {
 
     @Test
     public void testPostNewRecetteForm() throws Exception {
+        NotesCommand notesCommand = new NotesCommand();
+        notesCommand.setId(1L);
+
         RecetteCommand command = new RecetteCommand();
         command.setId(2L);
+        command.setNotes(notesCommand);
+
 
         when(recipeService.saveRecetteCommand(any())).thenReturn(command);
 
@@ -84,11 +98,43 @@ public class RecetteControllerTest {
                 .andExpect(view().name("redirect:/"));
     }
 
+
+
     @Test
     public void testGetUpdateView() throws Exception {
-        RecetteCommand command = new RecetteCommand();
-        command.setId(1L);
+/*        NotesCommand notesCommand = new NotesCommand();
+        notesCommand.setId(1L);
 
+        RecetteCommand command = new RecetteCommand();
+        command.setId(2L);
+        command.setNotes(notesCommand);*/
+        CategoryToCategoryCommand categoryToCategoryCommand = new CategoryToCategoryCommand();
+        UnitOfMeasureToUnitOfMeasureCommand unitOfMeasureToUnitOfMeasureCommand = new UnitOfMeasureToUnitOfMeasureCommand();
+        IngredientToIngredientCommand ingredientToIngredientCommand = new IngredientToIngredientCommand(unitOfMeasureToUnitOfMeasureCommand);
+        NotesToNotesCommand notesToNotesCommand = new NotesToNotesCommand();
+
+
+        CategoryCommandToCategory categoryCommandToCategory = new CategoryCommandToCategory();
+        UnitOfMeasureCommandToUnitOfMeasure unitOfMeasureCommandToUnitOfMeasure = new UnitOfMeasureCommandToUnitOfMeasure();
+        IngredientCommandToIngredient ingredientCommandToIngredient = new IngredientCommandToIngredient(unitOfMeasureCommandToUnitOfMeasure);
+        NotesCommandToNotes notesCommandToNotes = new NotesCommandToNotes();
+
+        RecetteService recetteService = mock(RecetteService.class);
+
+        Notes notes = new Notes();
+        notes.setId(1L);
+        Recette recette = new Recette();
+        recette.setId(2L);
+        recette.setNotes(notes);
+        notes.setRecette(recette);
+
+        RecetteCommand command = new RecetteToRecetteCommand(categoryToCategoryCommand,ingredientToIngredientCommand, notesToNotesCommand).convert(recette);
+        RecetteRepository repository = mock(RecetteRepository.class);
+        Set<Recette> recettes = new HashSet<>();
+        recettes.add(recette);
+        repository.saveAll(recettes);
+        RecetteCommandToRecette recetteCommandToRecette = new RecetteCommandToRecette(categoryCommandToCategory,ingredientCommandToIngredient,notesCommandToNotes);
+        recetteService.saveRecetteCommand(command);
         when(recipeService.findCommandById(anyLong())).thenReturn(command);
 
         mockMvc.perform(get("/recette/1/update"))

@@ -12,7 +12,8 @@ fails due to call itself again and again until it stack overflow. Using @EqualAn
 variable in below, I
 explicitly remove this bidirectional when Lombok tries to implement hashcode() .
  */
-@Data
+@Setter
+@Getter
 @EqualsAndHashCode(exclude = {"recette"})
 @Entity
 public class Notes {
@@ -21,7 +22,7 @@ public class Notes {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @OneToOne(cascade = CascadeType.ALL)
+    @OneToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     @JoinColumn(name = "recette_id")
     private Recette recette;
     @Lob

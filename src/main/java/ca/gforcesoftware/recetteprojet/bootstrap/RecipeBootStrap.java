@@ -26,8 +26,8 @@ public class RecipeBootStrap  implements ApplicationListener<ContextRefreshedEve
     private final RecetteRepository recetteRepository;
     private final UnitOfMeasureRepository unitOfMeasureRepository;
 
-    public RecipeBootStrap(CategoryRepository _categoryRepository, RecetteRepository recetteRepository, UnitOfMeasureRepository unitOfMeasureRepository) {
-        this.categoryRepository = _categoryRepository;
+    public RecipeBootStrap(CategoryRepository categoryRepository, RecetteRepository recetteRepository, UnitOfMeasureRepository unitOfMeasureRepository) {
+        this.categoryRepository = categoryRepository;
         this.recetteRepository = recetteRepository;
         this.unitOfMeasureRepository = unitOfMeasureRepository;
 
@@ -95,7 +95,7 @@ public class RecipeBootStrap  implements ApplicationListener<ContextRefreshedEve
         guacoRecette.addIngredient(new Ingredient("ripe avacado", new BigDecimal(2), eachUom));
         guacoRecette.addIngredient(new Ingredient("Kosher salt", new BigDecimal(5), tableSpoon));
         guacoRecette.getCategories().add(mexicanCategory);
-        recetteRepository.save(guacoRecette);
+       // recetteRepository.save(guacoRecette);
 
         recettes.add(guacoRecette);
         System.out.println("Recettes found: " + recettes.size());
@@ -113,6 +113,7 @@ public class RecipeBootStrap  implements ApplicationListener<ContextRefreshedEve
     public void onApplicationEvent(ContextRefreshedEvent event) {
         recetteRepository.saveAll(getRecettes());
         log.debug("Startup is running now");
+        Iterable<Recette> rr = recetteRepository.findAll();
     }
 
 
