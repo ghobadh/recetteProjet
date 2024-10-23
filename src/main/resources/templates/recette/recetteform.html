@@ -79,9 +79,15 @@
                                         </ul>
                                     </span>
                                 </div>
-                                <div class="col-md-3 form-group">
+                                <div class="col-md-3 form-group" th:class="${#fields.hasErrors('cookTime')}
+                                ? 'col-md-3 form-group has-error' : 'col-md-3 form-group'">
                                     <label>Cooktime:</label>
-                                    <input type="text" class="form-control" th:field="*{cookTime}"/>
+                                    <input type="text" class="form-control" th:field="*{cookTime}"  th:errorclass="has-error"/>
+                                    <span class="help-block" th:if="${#fields.hasErrors('cookTime')}">
+                                        <ul>
+                                            <li th:each="err : ${#fields.errors('cookTime')}" th:text="${err}"/>
+                                        </ul>
+                                    </span>
                                 </div>
                                 <div class="col-md-3 form-group">
                                     <!-- /* Since Difficulty is an enum, I used th:field to get it and display it. the T() is return  'type' */-->

@@ -10,6 +10,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -83,7 +84,32 @@ public class RecetteController {
     //saveOuUpdateRecette(@Valid @ModelAttribute("recette") RecetteCommand command)
     @PostMapping
     @RequestMapping({"/recette/","recette"})
-    public String saveOuUpdateRecette(@Valid @ModelAttribute("recette") RecetteCommand command){
+    public String saveOuUpdateRecette(@Valid @ModelAttribute("recette") RecetteCommand command ,BindingResult bindingResult){
+        /*
+        BindingResult is checking if there is any error in the HTML submit. Of course, I changed the code for example
+
+                                        <div class="col-md-3 form-group" th:class="${#fields.hasErrors('description')}
+                                ? 'col-md-3 form-group has-error' : 'col-md-3 form-group'">
+                                    <label>Recipe Description:</label>
+                                    <input type="text" class="form-control" th:field="*{description}" th:errorclass="has-error"/>
+                                    <span class="help-block" th:if="${#fields.hasErrors('description')}">
+                                        <ul>
+                                            <li th:each="err : ${#fields.errors('description')}" th:text="${err}"/>
+                                        </ul>
+                                    </span>
+                                </div>
+
+           for 'description' as I defined it as RecetteCommand as this
+                    @NotBlank
+                    @Size(min = 3 , max = 255)
+                    private String description;
+
+            if the fields.error gets raised, BindingResult will catch it.
+         */
+        if(bindingResult.hasErrors()){
+            bindingResult.getAllErrors().forEach(error -> log.info(error.getDefaultMessage()));
+            return "recette/recetteform";
+        }
         log.debug("-----> saveOuUpdateRecette method called");
         RecetteCommand recetteCommand = recetteService.saveRecetteCommand(command);
 
