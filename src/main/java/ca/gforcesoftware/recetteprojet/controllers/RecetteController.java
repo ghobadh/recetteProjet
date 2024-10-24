@@ -126,6 +126,14 @@ public class RecetteController {
         return "redirect:/";
     }
 
+    /*
+    This is for JSON format response
+     */
+    @GetMapping("recette/api")
+    public @ResponseBody Set<Recette> getAllRecette(){
+        log.debug("-----> getAllRecette method called");
+        return recetteService.getRecettes();
+    }
 
 
     /*
