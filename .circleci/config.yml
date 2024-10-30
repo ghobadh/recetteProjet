@@ -2,6 +2,9 @@
 # See: https://circleci.com/docs/configuration-reference
 version: 2.1
 
+orbs:
+  codecov: codecov/codecov@5.0.0
+
 # Define a job to be invoked later in a workflow.
 # See: https://circleci.com/docs/jobs-steps/#jobs-overview & https://circleci.com/docs/configuration-reference/#jobs
 jobs:
@@ -28,17 +31,14 @@ jobs:
       - run:
           name: Test
           command: mvn test
-orbs:
-  codecov: codecov/codecov@4.0.1
+      - run:
+          name: Send to CodeCov
+          command: bash <(curl -s https//codecov.io/bash)
 
 # Orchestrate jobs using workflows
 # See: https://circleci.com/docs/workflows/ & https://circleci.com/docs/configuration-reference/#workflows
 workflows:
-  sample: # This is the name of the workflow, feel free to change it to better match your workflow.
+  mainworkflow: # This is the name of the workflow, feel free to change it to better match your workflow.
     # Inside the workflow, you define the jobs you want to run.
-    upload-to-codecov:
-      jobs:
-        - checkout
-        - codecov/upload
     jobs:
       - build-and-test
