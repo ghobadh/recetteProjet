@@ -2,6 +2,10 @@
 # See: https://circleci.com/docs/configuration-reference
 version: 2.1
 
+# Adding Codecov.io
+orbs:
+  codecov: codecov/codecov@4.0.1
+
 # Define a job to be invoked later in a workflow.
 # See: https://circleci.com/docs/jobs-steps/#jobs-overview & https://circleci.com/docs/configuration-reference/#jobs
 jobs:
@@ -28,8 +32,6 @@ jobs:
       - run:
           name: Test
           command: mvn test
-orbs:
-  codecov: codecov/codecov@4.0.1
 
 # Orchestrate jobs using workflows
 # See: https://circleci.com/docs/workflows/ & https://circleci.com/docs/configuration-reference/#workflows
