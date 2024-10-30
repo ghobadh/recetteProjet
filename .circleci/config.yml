@@ -31,10 +31,11 @@ jobs:
       - run:
           name: Test
           command: mvn test
+
       - run:
           name: Send to CodeCov
           command: bash <(curl -s https://codecov.io/bash)
-
+      - codecov/upload
 # Orchestrate jobs using workflows
 # See: https://circleci.com/docs/workflows/ & https://circleci.com/docs/configuration-reference/#workflows
 workflows:
