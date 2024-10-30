@@ -36,9 +36,7 @@ orbs:
 workflows:
   sample: # This is the name of the workflow, feel free to change it to better match your workflow.
     # Inside the workflow, you define the jobs you want to run.
-    upload-to-codecov:
-      jobs:
-        - checkout
-        - codecov/upload
     jobs:
+      - checkout
+      - codecov/upload
       - build-and-test
