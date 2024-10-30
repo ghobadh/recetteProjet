@@ -31,10 +31,19 @@ jobs:
       - run:
           name: Test
           command: mvn test
+jobs:
+  build:
+    steps:
+      - codecov/upload:
+          file: { { coverage_report_filepath }}[_{{{CITATION{{{_2{Making code coverage easy to see with the Codecov CircleCI orb](https://circleci.com/blog/making-code-coverage-easy-to-see-with-the-codecov-orb/)
 
 # Orchestrate jobs using workflows
 # See: https://circleci.com/docs/workflows/ & https://circleci.com/docs/configuration-reference/#workflows
 workflows:
+  upload-to-codecov:
+    jobs:
+      - checkout
+      - codecov/upload
   mainworkflow: # This is the name of the workflow, feel free to change it to better match your workflow.
     # Inside the workflow, you define the jobs you want to run.
     jobs:
