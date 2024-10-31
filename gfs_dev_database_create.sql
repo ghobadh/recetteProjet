@@ -1,0 +1,15 @@
+create table category (id bigint not null auto_increment, description varchar(255), primary key (id)) engine=InnoDB;
+create table ingredient (amount decimal(38,2), id bigint not null auto_increment, recette_id bigint, unit_of_measure_id bigint, description varchar(255), primary key (id)) engine=InnoDB;
+create table notes (id bigint not null auto_increment, recette_id bigint, recette_notes longtext, primary key (id)) engine=InnoDB;
+create table recette (cooking_time integer, prep_time integer, servings integer, id bigint not null auto_increment, notes_id bigint, description varchar(255), source varchar(255), url varchar(255), difficulty enum ('EASIEST','EASY','HARD','MEDIUM','SOMEWHAT_HARD'), directions longtext, image longblob, primary key (id)) engine=InnoDB;
+create table recette_category (category_id bigint not null, recette_id bigint not null, primary key (category_id, recette_id)) engine=InnoDB;
+create table unit_of_measure (id bigint not null auto_increment, uom varchar(255), primary key (id)) engine=InnoDB;
+alter table ingredient add constraint UKap8vqk6q3bxoc70dqwfctxpe2 unique (unit_of_measure_id);
+alter table notes add constraint UKqh87xrxmfy9o33y6sb3wkn68n unique (recette_id);
+alter table recette add constraint UK9t77fe9wu38erttl9jng12n7y unique (notes_id);
+alter table ingredient add constraint FK1hnswaumj3pl9gycqmy4hqo4c foreign key (recette_id) references recette (id);
+alter table ingredient add constraint FK15ttfoaomqy1bbpo251fuidxw foreign key (unit_of_measure_id) references unit_of_measure (id);
+alter table notes add constraint FK21sd8dpvpy2gs7fgb9ehl4lhs foreign key (recette_id) references recette (id);
+alter table recette add constraint FKm3kugks3nn0tpnph7jputjchf foreign key (notes_id) references notes (id);
+alter table recette_category add constraint FKltdnm07fu3s4c20d2frsovll2 foreign key (category_id) references category (id);
+alter table recette_category add constraint FKddjkmld2w5dksjtkt6eym3byi foreign key (recette_id) references recette (id);
