@@ -1,0 +1,11 @@
+spring:
+  datasource:
+    url: jdbc:mysql://192.168.23.47:3306/gfsprod
+    username: gfsProdUser
+    password: gforce
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    database-platform:  org.hibernate.dialect.MySQL8Dialect
+    database: mysql
+    show-sql: true

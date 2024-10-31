@@ -11,15 +11,15 @@ CREATE USER 'gfsDevUser'@'%' identified by 'gforce';
 CREATE USER 'gfsProdUser'@'%' identified by 'gforce';
 
 
-GRANT SELECT ON gfsdev.* to 'gfsDevUser'@'localhost';
-GRANT INSERT ON gfsdev.* to 'gfsDevUser'@'localhost';
-GRANT DELETE ON gfsdev.* to 'gfsDevUser'@'localhost';
-GRANT UPDATE ON gfsdev.* to 'gfsDevUser'@'localhost';
+GRANT SELECT ON gfsdev.* to 'gfsDevUser'@'%';
+GRANT INSERT ON gfsdev.* to 'gfsDevUser'@'%';
+GRANT DELETE ON gfsdev.* to 'gfsDevUser'@'%';
+GRANT UPDATE ON gfsdev.* to 'gfsDevUser'@'%';
 
-GRANT SELECT ON gfsprod.* to 'gfsProdUser'@'localhost';
-GRANT INSERT ON gfsprod.* to 'gfsProdUser'@'localhost';
-GRANT DELETE ON gfsprod.* to 'gfsProdUser'@'localhost';
-GRANT UPDATE ON gfsprod.* to 'gfsProdUser'@'localhost';
+GRANT SELECT ON gfsprod.* to 'gfsProdUser'@'%';
+GRANT INSERT ON gfsprod.* to 'gfsProdUser'@'%';
+GRANT DELETE ON gfsprod.* to 'gfsProdUser'@'%';
+GRANT UPDATE ON gfsprod.* to 'gfsProdUser'@'%';
 
 
 
