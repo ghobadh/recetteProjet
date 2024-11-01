@@ -4,7 +4,11 @@ import ca.gforcesoftware.recetteprojet.domain.*;
 import ca.gforcesoftware.recetteprojet.repositories.CategoryRepository;
 import ca.gforcesoftware.recetteprojet.repositories.RecetteRepository;
 import ca.gforcesoftware.recetteprojet.repositories.UnitOfMeasureRepository;
+import ca.gforcesoftware.recetteprojet.repositories.reactive.CategoryReactiveRepository;
+import ca.gforcesoftware.recetteprojet.repositories.reactive.RecetteReactiveRepository;
+import ca.gforcesoftware.recetteprojet.repositories.reactive.UnitOfMeasureReactiveRepository;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.annotation.Profile;
@@ -26,6 +30,16 @@ public class RecipeBootStrap  implements ApplicationListener<ContextRefreshedEve
     private final CategoryRepository categoryRepository;
     private final RecetteRepository recetteRepository;
     private final UnitOfMeasureRepository unitOfMeasureRepository;
+
+    @Autowired
+    CategoryReactiveRepository categoryReactiveRepository;
+    @Autowired
+    RecetteReactiveRepository recetteReactiveRepository;
+    @Autowired
+    UnitOfMeasureReactiveRepository unitOfMeasureReactiveRepository;
+
+
+
 
     public RecipeBootStrap(CategoryRepository categoryRepository, RecetteRepository recetteRepository, UnitOfMeasureRepository unitOfMeasureRepository) {
         this.categoryRepository = categoryRepository;
@@ -173,6 +187,12 @@ public class RecipeBootStrap  implements ApplicationListener<ContextRefreshedEve
         recetteRepository.saveAll(getRecettes());
         log.debug("------ Startup is running now ----- ");
         Iterable<Recette> rr = recetteRepository.findAll();
+
+        log.info("COUNT RECETTE: {}",recetteReactiveRepository.count().block().toString());
+        log.info("COUNT Category: {}",categoryReactiveRepository.count().block().toString());
+        log.info("COUNT UOM: {}",unitOfMeasureReactiveRepository.count().block().toString());
+
+
     }
 
 
