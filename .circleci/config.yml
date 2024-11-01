@@ -30,7 +30,7 @@ jobs:
       # Then run your tests!
       - run:
           name: Test
-          command: mvn test
+          command: mvn clean test
 
       - run:
           name: Send to CodeCov
