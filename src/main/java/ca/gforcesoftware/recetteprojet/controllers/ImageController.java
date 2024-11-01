@@ -36,7 +36,7 @@ public class ImageController {
 
 
     @GetMapping("/recette/{id}/image")
-    public String showImage(@PathVariable Long id, Model model) {
+    public String showImage(@PathVariable String id, Model model) {
         model.addAttribute("recette", recetteService.findCommandById(id));
         return "recette/uploadingimageform";
     }
@@ -47,12 +47,13 @@ public class ImageController {
      */
     @GetMapping("/recette/{id}/recetteimage")
     public void renderRecetteImageFromDB(@PathVariable String id, HttpServletResponse response)  throws IOException {
-        Long longId;
-        try {
-            longId = Long.parseLong(id);
-        } catch (NumberFormatException ex){
-            throw new BadRequestException(ex.getMessage());
-        }
+        String longId;
+       // try {
+            //longId = Long.parseLong(id);
+            longId = id;
+        //} catch (NumberFormatException ex){
+       //     throw new BadRequestException(ex.getMessage());
+       // }
         RecetteCommand  recetteCommand = recetteService.findCommandById(longId);
         if (recetteCommand != null) {
             byte[] byteImage = new byte[recetteCommand.getImage().length];
@@ -70,7 +71,7 @@ public class ImageController {
     }
 
     @PostMapping("/recette/{id}/image")
-    public String saveImage(@PathVariable Long id, @RequestParam("imagefile") MultipartFile file) {
+    public String saveImage(@PathVariable String id, @RequestParam("imagefile") MultipartFile file) {
         log.info("Saving image to DB");
         log.info("Recette id {}", id);
         imageService.saveImage(id, file);

@@ -14,17 +14,21 @@ explicitly remove this bidirectional when Lombok tries to implement hashcode() .
  */
 @Setter
 @Getter
-@EqualsAndHashCode(exclude = {"recette"})
-@Entity
+//@EqualsAndHashCode(exclude = {"recette"})
+//@Entity
 public class Notes {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+        /* I removed the field and defined it as string because of Mongodb
+    Also I commented in @Entity since it was expecting a primary key
 
-    @OneToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
-    @JoinColumn(name = "recette_id")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id; */
+    @Id
+    private String id;
+
+    //@OneToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+   // @JoinColumn(name = "recette_id")
     private Recette recette;
-    @Lob
+    //@Lob
     private String RecetteNotes;
 }

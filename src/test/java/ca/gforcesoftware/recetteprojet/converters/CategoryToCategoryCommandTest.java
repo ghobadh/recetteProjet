@@ -11,7 +11,7 @@ import static org.junit.Assert.*;
  * @author gavinhashemi on 2024-10-14
  */
 public class CategoryToCategoryCommandTest {
-    private final Long ID_VALUE = 1L;
+    private final String ID_VALUE = "1";
     private final String DESCRIPTION_VALUE = "description";
     private CategoryToCategoryCommand converter;
 

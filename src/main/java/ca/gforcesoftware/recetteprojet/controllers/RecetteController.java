@@ -51,7 +51,7 @@ public class RecetteController {
     public String showById(@PathVariable String id, Model model){
         log.debug("showById method called");
         try {
-           Long longValue = parseLong(id);
+           String longValue = id;
             model.addAttribute("recette", recetteService.findById(longValue));
 
         } catch (NumberFormatException e) {
@@ -72,7 +72,8 @@ public class RecetteController {
     @GetMapping("recette/{id}/update")
     public String updateRecette(@PathVariable String id, Model model){
         log.debug("-----> Update Recette method called");
-        model.addAttribute("recette", recetteService.findCommandById(parseLong(id)));
+       // model.addAttribute("recette", recetteService.findCommandById(parseLong(id)));
+        model.addAttribute("recette", recetteService.findCommandById(id));
         return "recette/recetteform";
     }
 
@@ -122,7 +123,8 @@ public class RecetteController {
     @GetMapping("recette/{id}/delete")
     public String deleteRecette(@PathVariable String id){
         log.debug("-----> delete Recette method called. Recette id: " + id);
-        recetteService.deleteById(parseLong(id));
+        //recetteService.deleteById(parseLong(id));
+        recetteService.deleteById(id);
         return "redirect:/";
     }
 

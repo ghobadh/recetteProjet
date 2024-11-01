@@ -11,9 +11,7 @@ import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
-import java.util.HashSet;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
@@ -43,8 +41,8 @@ public class RecetteServiceImplTest {
     @Test(expected = NotFoundException.class)
     public void getRecetteByIdTestNotFoundException() throws Exception {
         Optional<Recette> recette = Optional.empty();
-        when(recetteRepository.findById(1L)).thenReturn(recette);
-        Recette recetteReturned = recetteService.findById(1L);
+        when(recetteRepository.findById("1")).thenReturn(recette);
+        Recette recetteReturned = recetteService.findById("1");
 
         // should be failed
     }
@@ -52,10 +50,10 @@ public class RecetteServiceImplTest {
     @Test
     public void getRecetteById() {
         Recette recette = new Recette();
-        recette.setId(1L);
+        recette.setId("1");
         Optional<Recette> recetteOptional = Optional.of(recette);
-        when(recetteRepository.findById(anyLong())).thenReturn(recetteOptional);
-        Recette recetteReturn = recetteService.findById(1L);
+        when(recetteRepository.findById(anyString())).thenReturn(recetteOptional);
+        Recette recetteReturn = recetteService.findById("1");
 
         assertNotNull( recetteReturn);
     }
@@ -63,24 +61,24 @@ public class RecetteServiceImplTest {
     @Test
     public void getRecettes() {
         Recette recette = new Recette();
-        HashSet<Recette> recetteData  = new HashSet<>();
+        List<Recette> recetteData  = new ArrayList<>();
         recetteData.add(recette);
 
         when(recetteRepository.findAll()).thenReturn(recetteData);
 
         Set<Recette> recetteSet = recetteService.getRecettes();
         assertEquals(1, recetteSet.size());
-        verify(recetteRepository, never()).findById(anyLong());
+        verify(recetteRepository, never()).findById(anyString());
         verify(recetteRepository,times(1)).findAll();
     }
 
     @Test
     public void testDeleteById()  {
-        Long idToDelete = 1L;
+        String idToDelete = "1";
         recetteService.deleteById(idToDelete);
 
         //there is no any when clause, because delete is has void return
 
-        verify(recetteRepository,times(1)).deleteById(anyLong());
+        verify(recetteRepository,times(1)).deleteById(anyString());
     }
 }

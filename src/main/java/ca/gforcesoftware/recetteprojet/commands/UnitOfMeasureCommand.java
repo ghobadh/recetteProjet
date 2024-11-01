@@ -11,7 +11,9 @@ import lombok.Setter;
 @Getter
 @NoArgsConstructor
 public class UnitOfMeasureCommand {
-    private Long id;
+    /* I removed the field and defined it as string because of Mongodb
+    private Long id;*/
+    private String id;
     private String description;
 
 }

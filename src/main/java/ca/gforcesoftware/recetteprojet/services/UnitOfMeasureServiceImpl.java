@@ -5,6 +5,7 @@ import ca.gforcesoftware.recetteprojet.converters.UnitOfMeasureToUnitOfMeasureCo
 import ca.gforcesoftware.recetteprojet.repositories.UnitOfMeasureRepository;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
@@ -23,10 +24,10 @@ public class UnitOfMeasureServiceImpl implements UnitOfMeasureService {
     }
 
     @Override
-    public Set<UnitOfMeasureCommand> listAllUoms() {
+    public List<UnitOfMeasureCommand> listAllUoms() {
         return StreamSupport.stream(unitOfMeasureRepository.findAll()
                 .spliterator(),false)
                 .map( i -> unitOfMeasureToUnitOfMeasureCommand.convert(i))
-                .collect(Collectors.toSet());
+                .collect(Collectors.toList());
     }
 }

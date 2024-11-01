@@ -4,7 +4,7 @@ INSERT INTO category (description) VALUES ('Frnech');
 INSERT INTO category (description) VALUES ('Korean');
 INSERT INTO category (description) VALUES ('Mexican');
 INSERT INTO unit_of_measure (uom) VALUES ('Teaspoon');
-INSERT INTO unit_of_measure (uom) VALUES ('Tablespoon');
+//INSERT INTO unit_of_measure (uom) VALUES ('Tablespoon');
 INSERT INTO unit_of_measure (uom) VALUES ('Cup');
 INSERT INTO unit_of_measure (uom) VALUES ('Pinch');
 INSERT INTO unit_of_measure (uom) VALUES ('Ounce');

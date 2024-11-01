@@ -49,15 +49,15 @@ public class ImageControllerTest {
     @Test
     public void testSaveImage() throws Exception {
         RecetteCommand recetteCommand = new RecetteCommand();
-        recetteCommand.setId(22L);
+        recetteCommand.setId("22");
 
-        when(recetteService.findCommandById(anyLong())).thenReturn(recetteCommand);
+        when(recetteService.findCommandById(anyString())).thenReturn(recetteCommand);
 
         mockMvc.perform(get("/recette/22/image"))
                 .andExpect(status().isOk())
                 .andExpect(model().attributeExists("recette"));
 
-        verify(recetteService, times(1)).findCommandById(anyLong());
+        verify(recetteService, times(1)).findCommandById(anyString());
     }
 
     @Test
@@ -69,14 +69,14 @@ public class ImageControllerTest {
                 .andExpect(status().is3xxRedirection())
                 .andExpect(header().string("Location", "/recette/1/show"));
 
-        verify(imageService,times(1)).saveImage(anyLong(),any());
+        verify(imageService,times(1)).saveImage(anyString(),any());
 
     }
 
     @Test
     public void testRenderImage() throws Exception {
         RecetteCommand recetteCommand = new RecetteCommand();
-        recetteCommand.setId(22L);
+        recetteCommand.setId("22");
         String s = "This is a test for the rendering the image";
         Byte[] bytes = new Byte[s.getBytes().length];
         int i = 0;
@@ -85,7 +85,7 @@ public class ImageControllerTest {
         }
         recetteCommand.setImage(bytes);
 
-        when(recetteService.findCommandById(anyLong())).thenReturn(recetteCommand);
+        when(recetteService.findCommandById(anyString())).thenReturn(recetteCommand);
 
         MockHttpServletResponse response = mockMvc.perform(get("/recette/1/recetteimage"))
                 .andExpect(status().isOk())
@@ -100,7 +100,7 @@ public class ImageControllerTest {
 
     @Test
     public void testHandleException() throws Exception {
-        mockMvc.perform(get("/recette/6e/recetteimage"))
+        mockMvc.perform(get("/recette/HI/recetteimage"))
                 .andExpect(status().isBadRequest())
                 .andExpect(view().name("400error"));
     }

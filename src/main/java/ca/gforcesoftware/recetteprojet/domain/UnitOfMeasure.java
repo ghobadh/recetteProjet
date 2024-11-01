@@ -2,17 +2,21 @@ package ca.gforcesoftware.recetteprojet.domain;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.springframework.data.mongodb.core.mapping.Document;
 
 /**
  * @author gavinhashemi on 2024-10-10
  */
-@Data
-@Entity
+//@Data
+//@Entity
+@Getter
+@Setter
+@Document
 public class UnitOfMeasure {
 
+    //@GeneratedValue (strategy = GenerationType.IDENTITY)
     @Id
-    @GeneratedValue (strategy = GenerationType.IDENTITY)
-    private Long id;
+    private String id;
     private String uom;
 
 

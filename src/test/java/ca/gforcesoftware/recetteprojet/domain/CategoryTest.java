@@ -28,7 +28,7 @@ public class CategoryTest {
 
     @Test
     public void setId() {
-        Long id = 100L;
+        String id = "100";
         category.setId(id);
         assertEquals(id, category.getId());
     }
@@ -43,7 +43,7 @@ public class CategoryTest {
     @Test
     public void setRecettes() {
         Recette recette = new Recette();
-        recette.setId(100L);
+        recette.setId("100");
         recette.setDescription("description");
         recette.setPrepTime(20);
         recette.setDifficulty(Difficulty.HARD);

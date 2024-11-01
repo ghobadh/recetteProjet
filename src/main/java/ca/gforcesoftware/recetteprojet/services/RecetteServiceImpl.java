@@ -40,7 +40,7 @@ public class RecetteServiceImpl implements RecetteService {
     }
 
     @Override
-    public Recette findById(Long id) {
+    public Recette findById(String id) {
         Optional<Recette> recette= recetteRepository.findById(id);
         if(!recette.isPresent()){
            // throw new RuntimeException("Recette not found");
@@ -61,14 +61,14 @@ public class RecetteServiceImpl implements RecetteService {
 
     @Override
     @Transactional
-    public RecetteCommand findCommandById(Long id) {
+    public RecetteCommand findCommandById(String id) {
         RecetteCommand recetteCommand = recetteToRecetteCommand.convert(findById(id));
         return recetteCommand;
     }
 
     @Override
     @Transactional
-    public void deleteById(Long l) {
+    public void deleteById(String l) {
         recetteRepository.deleteById(l);
 
     }

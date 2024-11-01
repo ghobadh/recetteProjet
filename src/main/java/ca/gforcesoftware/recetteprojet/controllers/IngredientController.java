@@ -35,7 +35,7 @@ public class IngredientController {
 
     @GetMapping
     @RequestMapping("/recette/{recetteId}/ingredients")
-    public String getIngredients(@PathVariable Long recetteId, Model model) {
+    public String getIngredients(@PathVariable String recetteId, Model model) {
         log.debug("Getting ingredients for " + recetteId);
         //I need to use findCommandById() rather than findById() to avoid lazy load error in Thymeleaf
         model.addAttribute("recette", recetteService.findCommandById(recetteId));
@@ -44,14 +44,14 @@ public class IngredientController {
 
     @GetMapping
     @RequestMapping("recette/{recetteId}/ingredient/{id}/show")
-    public String showIngredient(@PathVariable Long recetteId, @PathVariable Long id, Model model) {
+    public String showIngredient(@PathVariable String recetteId, @PathVariable String id, Model model) {
         model.addAttribute("ingredient", ingredientService.findByRecetteIDAndIngredientId(recetteId, id));
         return "/recette/ingredient/show";
     }
 
     @GetMapping
     @RequestMapping("recette/{recetteId}/ingredient/{id}/update")
-    public String updateIngredient(@PathVariable Long recetteId, @PathVariable Long id, Model model) {
+    public String updateIngredient(@PathVariable String recetteId, @PathVariable String id, Model model) {
         model.addAttribute("ingredient", ingredientService.findByRecetteIDAndIngredientId(recetteId, id));
         model.addAttribute("uomList", unitOfMeasureService.listAllUoms());
         return "/recette/ingredient/ingredientform";
@@ -60,7 +60,7 @@ public class IngredientController {
 
     @GetMapping
     @RequestMapping("recette/{recetteId}/ingredient/new")
-    public String updateIngredient(@PathVariable Long recetteId, Model model) {
+    public String updateIngredient(@PathVariable String recetteId, Model model) {
         RecetteCommand recetteCommand = recetteService.findCommandById(recetteId);
         if(recetteCommand == null) {
             log.error("Ne trouve pas cette recette avec id {}" , recetteId);
@@ -93,7 +93,8 @@ public class IngredientController {
     public String deleteIngredient(@PathVariable String recetteId, @PathVariable String id){
         log.debug("-----> delete Recette method called. Recette id {} and ingredient id {}: "
                 , recetteId, id);
-        ingredientService.deleteById(parseLong(recetteId), parseLong(id));
+      //  ingredientService.deleteById(parseLong(recetteId), parseLong(id));
+        ingredientService.deleteById(recetteId, id);
 
         return "redirect:/recette/"+ recetteId +"/ingredients";
     }

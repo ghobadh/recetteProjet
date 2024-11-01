@@ -11,7 +11,9 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.validator.constraints.URL;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -21,7 +23,9 @@ import java.util.Set;
 @Getter
 @NoArgsConstructor
 public class RecetteCommand {
-    private Long id;
+        /* I removed the field and defined it as string because of Mongodb
+        private Long id;*/
+    private String id;
 
     @NotBlank
     @Size(min = 3 , max = 255)
@@ -46,9 +50,9 @@ public class RecetteCommand {
     @NotBlank
     private String direction;
 
-    private Set<IngredientCommand> ingredients = new HashSet<>();
+    private List<IngredientCommand> ingredients = new ArrayList<>();
     private Difficulty difficulty;
-    private Set<CategoryCommand> categories = new HashSet<>();
+    private List<CategoryCommand> categories = new ArrayList<>();
     private NotesCommand notes;
     private Byte[] image;
 

@@ -2,6 +2,7 @@ package ca.gforcesoftware.recetteprojet.domain;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.util.Set;
 
@@ -14,14 +15,21 @@ fails due to call itself again and again until it stack overflow. Using @EqualAn
 variable in below, I
 explicitly remove this bidirectional when Lombok tries to implement hashcode() .
  */
-@Data
-@EqualsAndHashCode(exclude = {"recettes"})
-@Entity
-@Table(name="category")
+//@Data
+//@EqualsAndHashCode(exclude = {"recettes"})
+//@Entity
+//@Table(name="category")
+@Getter
+@Setter
+@Document
 public class Category {
-    @Id
+        /* I removed the field and defined it as string because of Mongodb
+    Also I commented in @Entity since it was expecting a primary key
+
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Long id;*/
+    @Id
+    private String id;
     private String description;
 
     //This is the name of the variable in Recette class file ---> private Set<Category> categories;

@@ -5,7 +5,6 @@ import ca.gforcesoftware.recetteprojet.domain.Ingredient;
 import jakarta.annotation.Nullable;
 import lombok.Synchronized;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.stereotype.Component;
 
@@ -34,9 +33,10 @@ public class IngredientToIngredientCommand implements Converter<Ingredient, Ingr
         IngredientCommand ingredientCommand = new IngredientCommand();
         ingredientCommand.setId(source.getId());
 
-        if (source.getRecette() != null){
-            ingredientCommand.setRecetteId(source.getRecette().getId());
-        }
+       //if (source.getRecette() != null){
+        //    ingredientCommand.setRecetteId(source.getRecette().getId());
+       // }
+        ingredientCommand.setRecetteId(source.getRecetteId());
         ingredientCommand.setDescription(source.getDescription());
         ingredientCommand.setAmount(source.getAmount());
         ingredientCommand.setUomCommand(unitOfMeasureToUnitOfMeasureCommand.convert(source.getUnitOfMeasure()));

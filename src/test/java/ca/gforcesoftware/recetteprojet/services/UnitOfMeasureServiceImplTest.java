@@ -9,7 +9,9 @@ import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import static org.junit.Assert.*;
@@ -36,17 +38,17 @@ public class UnitOfMeasureServiceImplTest {
 
     @Test
     public void listAllUoms() {
-        Set<UnitOfMeasure> setUnitOfMeasures = new HashSet<>();
+        List<UnitOfMeasure> setUnitOfMeasures = new ArrayList<>();
         UnitOfMeasure unitOfMeasure1 = new UnitOfMeasure();
-        unitOfMeasure1.setId(1L);
+        unitOfMeasure1.setId("1");
         UnitOfMeasure unitOfMeasure2 = new UnitOfMeasure();
-        unitOfMeasure2.setId(2L);
+        unitOfMeasure2.setId("2");
         setUnitOfMeasures.add(unitOfMeasure1);
         setUnitOfMeasures.add(unitOfMeasure2);
 
         when(unitOfMeasureRepository.findAll()).thenReturn(setUnitOfMeasures);
 
-        Set<UnitOfMeasureCommand> suom = unitOfMeasureService.listAllUoms();
+        List<UnitOfMeasureCommand> suom = unitOfMeasureService.listAllUoms();
         verify(unitOfMeasureRepository,times(1)).findAll();
 
     }

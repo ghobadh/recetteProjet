@@ -22,7 +22,6 @@ import java.util.Optional;
  */
 @Slf4j
 @Component
-@Profile({"default"})
 public class RecipeBootStrap  implements ApplicationListener<ContextRefreshedEvent> {
     private final CategoryRepository categoryRepository;
     private final RecetteRepository recetteRepository;
@@ -37,18 +36,25 @@ public class RecipeBootStrap  implements ApplicationListener<ContextRefreshedEve
     }
 
     private List<Recette> getRecettes() {
+        recetteRepository.deleteAll();
+        unitOfMeasureRepository.deleteAll();
+        categoryRepository.deleteAll();
+
+        loadUom();
+        loadCategories();
         List<Recette> recettes = new ArrayList<>(1);
 
-        Optional<UnitOfMeasure> eachUomOptional = unitOfMeasureRepository.findByUom("2 ripe avocados");
+        Optional<UnitOfMeasure> eachUomOptional = unitOfMeasureRepository.findByUom("Tablespoon");
 
         if (!eachUomOptional.isPresent()) {
+
             throw new RuntimeException("There is no  UnitOfMeasure");
         }
 
-        Optional<UnitOfMeasure> tableSpoonOpta = unitOfMeasureRepository.findByUom("Tablespoon");
+        Optional <UnitOfMeasure> tableSpoonOpta = unitOfMeasureRepository.findByUom("Tablespoon");
         if (!tableSpoonOpta.isPresent()) {
             throw new RuntimeException("There is no  Tablesppon");
-        }
+       }
 
 
         UnitOfMeasure eachUom = eachUomOptional.get();
@@ -94,14 +100,65 @@ public class RecipeBootStrap  implements ApplicationListener<ContextRefreshedEve
         guacoRecette.setNotes(guacoNotes);
 
         guacoRecette.setDifficulty(Difficulty.MEDIUM);
-        guacoRecette.addIngredient(new Ingredient("ripe avacado", new BigDecimal(2), eachUom));
-        guacoRecette.addIngredient(new Ingredient("Kosher salt", new BigDecimal(5), tableSpoon));
+        guacoRecette.addIngredient(new Ingredient("ripe avacado", new BigDecimal(2), eachUom, guacoRecette.getId()));
+        guacoRecette.addIngredient(new Ingredient("Kosher salt", new BigDecimal(5), tableSpoon, guacoRecette.getId()));
         guacoRecette.getCategories().add(mexicanCategory);
        // recetteRepository.save(guacoRecette);
 
         recettes.add(guacoRecette);
         System.out.println("Recettes found: " + recettes.size());
         return recettes;
+    }
+    private void loadCategories(){
+        Category cat1 = new Category();
+        cat1.setDescription("American");
+        categoryRepository.save(cat1);
+
+        Category cat2 = new Category();
+        cat2.setDescription("Italian");
+        categoryRepository.save(cat2);
+
+        Category cat3 = new Category();
+        cat3.setDescription("Mexican");
+        categoryRepository.save(cat3);
+
+        Category cat4 = new Category();
+        cat4.setDescription("Fast Food");
+        categoryRepository.save(cat4);
+    }
+
+    private void loadUom(){
+        UnitOfMeasure uom1 = new UnitOfMeasure();
+        uom1.setUom("Teaspoon");
+        unitOfMeasureRepository.save(uom1);
+
+        UnitOfMeasure uom2 = new UnitOfMeasure();
+        uom2.setUom("Tablespoon");
+        unitOfMeasureRepository.save(uom2);
+
+        UnitOfMeasure uom3 = new UnitOfMeasure();
+        uom3.setUom("Cup");
+        unitOfMeasureRepository.save(uom3);
+
+        UnitOfMeasure uom4 = new UnitOfMeasure();
+        uom4.setUom("Pinch");
+        unitOfMeasureRepository.save(uom4);
+
+        UnitOfMeasure uom5 = new UnitOfMeasure();
+        uom5.setUom("Ounce");
+        unitOfMeasureRepository.save(uom5);
+
+        UnitOfMeasure uom6 = new UnitOfMeasure();
+        uom6.setUom("Each");
+        unitOfMeasureRepository.save(uom6);
+
+        UnitOfMeasure uom7 = new UnitOfMeasure();
+        uom7.setUom("Pint");
+        unitOfMeasureRepository.save(uom7);
+
+        UnitOfMeasure uom8 = new UnitOfMeasure();
+        uom8.setUom("Dash");
+        unitOfMeasureRepository.save(uom8);
     }
 
 
@@ -114,7 +171,7 @@ public class RecipeBootStrap  implements ApplicationListener<ContextRefreshedEve
     @Transactional
     public void onApplicationEvent(ContextRefreshedEvent event) {
         recetteRepository.saveAll(getRecettes());
-        log.debug("Startup is running now");
+        log.debug("------ Startup is running now ----- ");
         Iterable<Recette> rr = recetteRepository.findAll();
     }
 

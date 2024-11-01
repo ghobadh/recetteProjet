@@ -13,8 +13,10 @@ import java.math.BigDecimal;
 @Getter
 @NoArgsConstructor
 public class IngredientCommand {
-    private Long id;
-    private Long recetteId;
+    /* I removed the field and defined it as string because of Mongodb
+    private Long id;*/
+    private String id;
+    private String recetteId;
     private String description;
     private BigDecimal amount;
     private UnitOfMeasureCommand uomCommand;

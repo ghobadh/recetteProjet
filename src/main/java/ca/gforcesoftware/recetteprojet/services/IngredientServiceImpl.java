@@ -39,13 +39,13 @@ public class IngredientServiceImpl implements IngredientService {
     }
 
     @Override
-    public Recette getRecetteById(Long id) {
+    public Recette getRecetteById(String id) {
 
         return recetteRepository.findById(id).orElse(null);
     }
 
     @Override
-    public IngredientCommand findByRecetteIDAndIngredientId(Long recetteId, Long ingredientId) {
+    public IngredientCommand findByRecetteIDAndIngredientId(String recetteId, String ingredientId) {
         Optional<Recette> recette = recetteRepository.findById(recetteId);
 
         if (!recette.isPresent()) {
@@ -96,7 +96,7 @@ public class IngredientServiceImpl implements IngredientService {
             } else {
                 //add new Ingredient
                 Ingredient ingredient = ingredientCommandToIngredient.convert(command);
-                ingredient.setRecette(recipe);
+               // ingredient.setRecette(recipe);
                 recipe.addIngredient(ingredient);
 
             }
@@ -125,7 +125,7 @@ public class IngredientServiceImpl implements IngredientService {
     }
 
     @Override
-    public void deleteById(Long recetteId, Long ingredientId) {
+    public void deleteById(String recetteId, String ingredientId) {
         Optional<Recette> optionalRecette = recetteRepository.findById(recetteId);
 
         if (optionalRecette.isPresent()) {
@@ -138,7 +138,7 @@ public class IngredientServiceImpl implements IngredientService {
                     .findFirst();
             if (optionalIngredient.isPresent()) {
                 Ingredient ingredient = optionalIngredient.get();
-                ingredient.setRecette(null);
+               // ingredient.setRecette(null);
                 recette.getIngredients().remove(optionalIngredient.get());
                 recetteRepository.save(recette);
             }

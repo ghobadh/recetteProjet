@@ -55,9 +55,9 @@ public class RecetteControllerTest {
     public void testGetRecette() throws Exception {
 
         Recette recette = new Recette();
-        recette.setId(1L);
+        recette.setId("1");
 
-        when(recipeService.findById(anyLong())).thenReturn(recette);
+        when(recipeService.findById(anyString())).thenReturn(recette);
 
         mockMvc.perform(get("/recette/1/show"))
                 .andExpect(status().isOk())
@@ -78,10 +78,10 @@ public class RecetteControllerTest {
     @Test
     public void testPostNewRecetteForm() throws Exception {
         NotesCommand notesCommand = new NotesCommand();
-        notesCommand.setId(1L);
+        notesCommand.setId("1");
 
         RecetteCommand command = new RecetteCommand();
-        command.setId(2L);
+        command.setId("2");
         command.setNotes(notesCommand);
 
 
@@ -103,7 +103,7 @@ public class RecetteControllerTest {
     @Test
     public void testGetUpdateView() throws Exception {
 /*        NotesCommand notesCommand = new NotesCommand();
-        notesCommand.setId(1L);
+        notesCommand.setId("1");
 
         RecetteCommand command = new RecetteCommand();
         command.setId(2L);
@@ -122,9 +122,9 @@ public class RecetteControllerTest {
         RecetteService recetteService = mock(RecetteService.class);
 
         Notes notes = new Notes();
-        notes.setId(1L);
+        notes.setId("1");
         Recette recette = new Recette();
-        recette.setId(2L);
+        recette.setId("2");
         recette.setNotes(notes);
         notes.setRecette(recette);
 
@@ -135,7 +135,7 @@ public class RecetteControllerTest {
         repository.saveAll(recettes);
         RecetteCommandToRecette recetteCommandToRecette = new RecetteCommandToRecette(categoryCommandToCategory,ingredientCommandToIngredient,notesCommandToNotes);
         recetteService.saveRecetteCommand(command);
-        when(recipeService.findCommandById(anyLong())).thenReturn(command);
+        when(recipeService.findCommandById(anyString())).thenReturn(command);
 
         mockMvc.perform(get("/recette/1/update"))
                 .andExpect(status().isOk())
@@ -149,7 +149,7 @@ public class RecetteControllerTest {
                 .andExpect(status().is3xxRedirection())
                 .andExpect(view().name("redirect:/"));
 
-        verify(recipeService, times(1)).deleteById(anyLong());
+        verify(recipeService, times(1)).deleteById(anyString());
     }
 
     @Test
@@ -168,9 +168,9 @@ public class RecetteControllerTest {
     @Test
     public void testRecetteNotFound() throws Exception {
         Recette recette = new Recette();
-        recette.setId(1L);
+        recette.setId("1");
 
-        when(recipeService.findById(anyLong())).thenThrow(NotFoundException.class);
+        when(recipeService.findById(anyString())).thenThrow(NotFoundException.class);
 
         mockMvc.perform(get("/recette/1/show"))
                 .andExpect(status().isNotFound());
@@ -178,7 +178,7 @@ public class RecetteControllerTest {
 
     @Test
     public void testRecetteException() throws Exception {
-        when(recipeService.findById(anyLong())).thenThrow(NotFoundException.class);
+        when(recipeService.findById(anyString())).thenThrow(NotFoundException.class);
 
         mockMvc.perform(get("/recette/1/show"))
                 .andExpect(status().isNotFound())

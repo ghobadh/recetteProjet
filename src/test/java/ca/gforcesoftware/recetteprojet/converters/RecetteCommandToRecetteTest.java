@@ -15,13 +15,13 @@ import static org.junit.Assert.*;
  */
 public class RecetteCommandToRecetteTest {
 
-    private final Long ID_VALUE = 1L;
+    private final String ID_VALUE = "1";
     private final String DESCRIPTION = "description";
     private final String DIRECTION = "direction";
     private final String URL = "url";
-    private final Long NOTES_ID = 2L;
-    private final Long CATEGORY_ID = 3L;
-    private final Long INGREDIENT_ID = 4L;
+    private final String NOTES_ID = "2";
+    private final String CATEGORY_ID = "3";
+    private final String INGREDIENT_ID = "4";
     private RecetteCommandToRecette converter;
 
     @Before

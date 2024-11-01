@@ -2,9 +2,10 @@ package ca.gforcesoftware.recetteprojet.domain;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.springframework.data.mongodb.core.mapping.DBRef;
+import org.springframework.data.mongodb.core.mapping.Document;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 /**
  * @author gavinhashemi on 2024-10-10
@@ -15,14 +16,21 @@ I have to change @Data to these lombok annotation the reason it the toString() m
  */
 @Getter
 @Setter
-@NoArgsConstructor
-@AllArgsConstructor
-@Entity
+//@NoArgsConstructor
+//@AllArgsConstructor
+//@Entity
+@Document
 public class Recette {
 
-    @Id
+    /* I removed the field and defined it as string because of Mongodb
+    Also I commented in @Entity since it was expecting a primary key
+
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+     */
+    @Id
+    private String id = UUID.randomUUID().toString();
 
     private String description;
     private Integer prepTime;
@@ -30,43 +38,25 @@ public class Recette {
     private Integer servings;
     private String source;
     private String url;
-
-    @Lob
     private String directions;
-
-    @Enumerated(value = EnumType.STRING)
     private Difficulty difficulty;
-
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "recette")
-    private Set<Ingredient> ingredients = new HashSet<>();
-
-    @Lob
+    private List<Ingredient> ingredients = new ArrayList<>();
     private Byte[] image;
-
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "notes_id")
     private Notes notes;
 
-    /*
-    Since this is many to many we need a jointable , join columns, and inverse join column. for join column and inverse join column we use "[class name lower case]_id". In this way, then the table name is created
-    it joins to id to each other. Note that, in category class file, we use only "mappedby" to tell which variable in here is mapped to
-     */
-    @ManyToMany
-    @JoinTable(name = "recette_category",
-            joinColumns = @JoinColumn(name = "recette_id"),
-            inverseJoinColumns = @JoinColumn(name = "category_id"))
-    private Set<Category> categories = new HashSet<>();
+    @DBRef
+    private List<Category> categories = new ArrayList<>();
 
     public void setNotes(Notes notes) {
         if (notes != null) {
             this.notes = notes;
-            notes.setRecette(this);
+           // notes.setRecette(this);
         }
 
     }
 
     public Recette addIngredient(Ingredient ingredient) {
-        ingredient.setRecette(this);
+       // ingredient.setRecette(this);
         this.ingredients.add(ingredient);
         return this;
     }

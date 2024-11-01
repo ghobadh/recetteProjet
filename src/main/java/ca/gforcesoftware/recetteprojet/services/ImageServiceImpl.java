@@ -37,7 +37,7 @@ public class ImageServiceImpl implements ImageService {
 
     @Override
     @Transactional
-    public void saveImage(Long RecetteID, MultipartFile file) {
+    public void saveImage(String RecetteID, MultipartFile file) {
         try {
             Recette recette = recetteRepository.findById(RecetteID).get();
 
