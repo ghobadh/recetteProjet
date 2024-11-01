@@ -30,7 +30,7 @@ jobs:
       # Then run your tests!
       - run:
           name: Test
-          command: mvn -X -Dspring.profiles.active=test clean
+          command: mvn -X -Dspring.profiles.active=test clean test
 
       - run:
           name: Send to CodeCov
