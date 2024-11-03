@@ -13,6 +13,7 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
+import reactor.core.publisher.Flux;
 
 import java.util.Set;
 
@@ -132,7 +133,7 @@ public class RecetteController {
     This is for JSON format response
      */
     @GetMapping("recette/api")
-    public @ResponseBody Set<Recette> getAllRecette(){
+    public @ResponseBody Flux<Recette> getAllRecette(){
         log.debug("-----> getAllRecette method called");
         return recetteService.getRecettes();
     }

@@ -2,6 +2,7 @@ package ca.gforcesoftware.recetteprojet.services;
 
 import ca.gforcesoftware.recetteprojet.commands.IngredientCommand;
 import ca.gforcesoftware.recetteprojet.domain.Recette;
+import reactor.core.publisher.Mono;
 
 /**
  * @author gavinhashemi on 2024-10-16
@@ -9,9 +10,9 @@ import ca.gforcesoftware.recetteprojet.domain.Recette;
 public interface IngredientService {
     Recette getRecetteById(String id);
 
-    IngredientCommand findByRecetteIDAndIngredientId(String recetteId, String ingredientId);
+    Mono<IngredientCommand> findByRecetteIDAndIngredientId(String recetteId, String ingredientId);
 
-    IngredientCommand saveIngredientCommand(IngredientCommand command);
+    Mono<IngredientCommand> saveIngredientCommand(IngredientCommand command);
 
-    void deleteById(String recetteId, String ingredientId);
+    Mono<Void> deleteById(String recetteId, String ingredientId);
 }

@@ -4,16 +4,14 @@ import ca.gforcesoftware.recetteprojet.commands.RecetteCommand;
 import ca.gforcesoftware.recetteprojet.converters.RecetteCommandToRecette;
 import ca.gforcesoftware.recetteprojet.converters.RecetteToRecetteCommand;
 import ca.gforcesoftware.recetteprojet.domain.Recette;
-import ca.gforcesoftware.recetteprojet.repositories.RecetteRepository;
 import ca.gforcesoftware.recetteprojet.exceptions.NotFoundException;
+import ca.gforcesoftware.recetteprojet.repositories.reactive.RecetteReactiveRepository;
 import lombok.extern.slf4j.Slf4j;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.HashSet;
-import java.util.Optional;
-import java.util.Set;
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 
 /**
  * @author gavinhashemi on 2024-10-11
@@ -21,32 +19,42 @@ import java.util.Set;
 @Slf4j
 @Service
 public class RecetteServiceImpl implements RecetteService {
-    private final RecetteRepository recetteRepository;
+    private final RecetteReactiveRepository recetteReactiveRepository;
     private final RecetteCommandToRecette recetteCommandToRecette;
     private final RecetteToRecetteCommand recetteToRecetteCommand;
 
-    public RecetteServiceImpl(RecetteRepository recetteRepository, RecetteCommandToRecette recetteCommandToRecette, RecetteToRecetteCommand recetteToRecetteCommand) {
-        this.recetteRepository = recetteRepository;
+    public RecetteServiceImpl(RecetteReactiveRepository recetteReactiveRepository,
+                              RecetteCommandToRecette recetteCommandToRecette,
+                              RecetteToRecetteCommand recetteToRecetteCommand) {
+        this.recetteReactiveRepository = recetteReactiveRepository;
         this.recetteCommandToRecette = recetteCommandToRecette;
         this.recetteToRecetteCommand = recetteToRecetteCommand;
     }
 
     @Override
-    public Set<Recette> getRecettes() {
+    public Flux<Recette> getRecettes() {
         log.debug("getRecette is called in debug mode");
-        Set<Recette> recettes = new HashSet<>();
-        recetteRepository.findAll().forEach(recettes::add);
-        return recettes;
+        //Set<Recette> recettes = new HashSet<>();
+        //recetteRepository.findAll().forEach(recettes::add);
+       // return recettes;
+        return  recetteReactiveRepository.findAll();
     }
 
     @Override
     public Recette findById(String id) {
-        Optional<Recette> recette= recetteRepository.findById(id);
-        if(!recette.isPresent()){
+        Mono<Recette> recette= recetteReactiveRepository.findById(id);
+        recette.hasElement().subscribe(hasElement -> {
+            if (hasElement) {
+                log.info("recette found");
+            } else {
+                throw new NotFoundException("Recette id not found for given id: " + id.toString());
+            }
+        });
+        /*if(!recette.isPresent()){
            // throw new RuntimeException("Recette not found");
             throw new NotFoundException("Recette id not found for given id: " + id.toString());
-        }
-        return recette.get();
+        } */
+        return recette.block();
     }
 
     @Transactional
@@ -54,7 +62,7 @@ public class RecetteServiceImpl implements RecetteService {
     public RecetteCommand saveRecetteCommand(RecetteCommand recetteCommand) {
         Recette recette = recetteCommandToRecette.convert(recetteCommand);
         log.info("recette ID: " + recette.getId());
-        Recette savedRecette = recetteRepository.save(recette);
+        Recette savedRecette = recetteReactiveRepository.save(recette).block();
         log.info(" --- saved recette to database ----");
         return recetteToRecetteCommand.convert(savedRecette);
     }
@@ -69,7 +77,7 @@ public class RecetteServiceImpl implements RecetteService {
     @Override
     @Transactional
     public void deleteById(String l) {
-        recetteRepository.deleteById(l);
+        recetteReactiveRepository.deleteById(l);
 
     }
 }

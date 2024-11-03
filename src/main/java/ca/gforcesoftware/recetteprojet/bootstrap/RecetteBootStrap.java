@@ -8,13 +8,14 @@ import ca.gforcesoftware.recetteprojet.repositories.reactive.CategoryReactiveRep
 import ca.gforcesoftware.recetteprojet.repositories.reactive.RecetteReactiveRepository;
 import ca.gforcesoftware.recetteprojet.repositories.reactive.UnitOfMeasureReactiveRepository;
 import lombok.extern.slf4j.Slf4j;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.ApplicationListener;
-import org.springframework.context.annotation.Profile;
 import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -26,61 +27,76 @@ import java.util.Optional;
  */
 @Slf4j
 @Component
-public class RecipeBootStrap  implements ApplicationListener<ContextRefreshedEvent> {
-    private final CategoryRepository categoryRepository;
-    private final RecetteRepository recetteRepository;
-    private final UnitOfMeasureRepository unitOfMeasureRepository;
+public class RecetteBootStrap implements ApplicationListener<ContextRefreshedEvent> {
+    //private final CategoryRepository categoryRepository;
+    //private final RecetteRepository recetteRepository;
+    //private final UnitOfMeasureRepository unitOfMeasureRepository;
 
-    @Autowired
+   // @Autowired
     CategoryReactiveRepository categoryReactiveRepository;
-    @Autowired
+   // @Autowired
     RecetteReactiveRepository recetteReactiveRepository;
-    @Autowired
+   // @Autowired
     UnitOfMeasureReactiveRepository unitOfMeasureReactiveRepository;
 
+    public RecetteBootStrap(CategoryReactiveRepository categoryReactiveRepository,RecetteReactiveRepository
+            recetteReactiveRepository,UnitOfMeasureReactiveRepository unitOfMeasureReactiveRepository){
+        this.categoryReactiveRepository = categoryReactiveRepository;
+        this.recetteReactiveRepository = recetteReactiveRepository;
+        this.unitOfMeasureReactiveRepository = unitOfMeasureReactiveRepository;
+    }
 
 
-
-    public RecipeBootStrap(CategoryRepository categoryRepository, RecetteRepository recetteRepository, UnitOfMeasureRepository unitOfMeasureRepository) {
+    /*public RecetteBootStrap(CategoryRepository categoryRepository, RecetteRepository recetteRepository,
+                            UnitOfMeasureRepository unitOfMeasureRepository) {
         this.categoryRepository = categoryRepository;
         this.recetteRepository = recetteRepository;
         this.unitOfMeasureRepository = unitOfMeasureRepository;
 
 
-    }
+    }*/
 
+    @NotNull
     private List<Recette> getRecettes() {
-        recetteRepository.deleteAll();
-        unitOfMeasureRepository.deleteAll();
-        categoryRepository.deleteAll();
+        recetteReactiveRepository.deleteAll().block();
+        unitOfMeasureReactiveRepository.deleteAll().block();
+        categoryReactiveRepository.deleteAll().block();
 
         loadUom();
         loadCategories();
         List<Recette> recettes = new ArrayList<>(1);
 
-        Optional<UnitOfMeasure> eachUomOptional = unitOfMeasureRepository.findByUom("Tablespoon");
+        Mono<UnitOfMeasure> eachUomOptional = unitOfMeasureReactiveRepository.findByUom("Tablespoon");
 
-        if (!eachUomOptional.isPresent()) {
+        eachUomOptional.hasElement().subscribe(hasElement -> {
+            if (hasElement) {
+                log.info("Mono has a value.");
+            } else {
+                log.error("Mono is empty.");
+            }
+        });
+        Mono <UnitOfMeasure> tableSpoonOpta = unitOfMeasureReactiveRepository.findByUom("Tablespoon");
+        tableSpoonOpta.hasElement().subscribe(e -> {
+            if (e) {
+                log.info("Mono has a value.");
+            } else {
+                log.error("Mono is empty.");
+            }
+         });
 
-            throw new RuntimeException("There is no  UnitOfMeasure");
-        }
+        UnitOfMeasure eachUom = eachUomOptional.block();
+        UnitOfMeasure tableSpoon = tableSpoonOpta.block();
 
-        Optional <UnitOfMeasure> tableSpoonOpta = unitOfMeasureRepository.findByUom("Tablespoon");
-        if (!tableSpoonOpta.isPresent()) {
-            throw new RuntimeException("There is no  Tablesppon");
-       }
+        Mono<Category> mexicanCategoryOptional = categoryReactiveRepository.findByDescription("Mexican");
+        mexicanCategoryOptional.hasElement().subscribe(e1 -> {
+                if (e1) {
+                    log.info("Mono has a value.");
+                } else {
+                    log.error("Mono is empty.");
+                }
+                });
 
-
-        UnitOfMeasure eachUom = eachUomOptional.get();
-        UnitOfMeasure tableSpoon = tableSpoonOpta.get();
-
-        Optional<Category> mexicanCategoryOptional = categoryRepository.findByDescription("Mexican");
-        if (!mexicanCategoryOptional.isPresent()) {
-            throw new RuntimeException("There is no Mexican Category");
-        }
-
-
-        Category mexicanCategory = mexicanCategoryOptional.get();
+        Category mexicanCategory = mexicanCategoryOptional.block();
         Recette guacoRecette = new Recette();
         guacoRecette.setDescription("Perfect Gaucamole");
         guacoRecette.setCookingTime(0);
@@ -126,53 +142,53 @@ public class RecipeBootStrap  implements ApplicationListener<ContextRefreshedEve
     private void loadCategories(){
         Category cat1 = new Category();
         cat1.setDescription("American");
-        categoryRepository.save(cat1);
+        categoryReactiveRepository.save(cat1).block();
 
         Category cat2 = new Category();
         cat2.setDescription("Italian");
-        categoryRepository.save(cat2);
+        categoryReactiveRepository.save(cat2).block();
 
         Category cat3 = new Category();
         cat3.setDescription("Mexican");
-        categoryRepository.save(cat3);
+        categoryReactiveRepository.save(cat3).block();
 
         Category cat4 = new Category();
         cat4.setDescription("Fast Food");
-        categoryRepository.save(cat4);
+        categoryReactiveRepository.save(cat4).block();
     }
 
     private void loadUom(){
         UnitOfMeasure uom1 = new UnitOfMeasure();
         uom1.setUom("Teaspoon");
-        unitOfMeasureRepository.save(uom1);
+        unitOfMeasureReactiveRepository.save(uom1).block();
 
         UnitOfMeasure uom2 = new UnitOfMeasure();
         uom2.setUom("Tablespoon");
-        unitOfMeasureRepository.save(uom2);
+        unitOfMeasureReactiveRepository.save(uom2).block();
 
         UnitOfMeasure uom3 = new UnitOfMeasure();
         uom3.setUom("Cup");
-        unitOfMeasureRepository.save(uom3);
+        unitOfMeasureReactiveRepository.save(uom3).block();
 
         UnitOfMeasure uom4 = new UnitOfMeasure();
         uom4.setUom("Pinch");
-        unitOfMeasureRepository.save(uom4);
+        unitOfMeasureReactiveRepository.save(uom4).block();
 
         UnitOfMeasure uom5 = new UnitOfMeasure();
         uom5.setUom("Ounce");
-        unitOfMeasureRepository.save(uom5);
+        unitOfMeasureReactiveRepository.save(uom5).block();
 
         UnitOfMeasure uom6 = new UnitOfMeasure();
         uom6.setUom("Each");
-        unitOfMeasureRepository.save(uom6);
+        unitOfMeasureReactiveRepository.save(uom6).block();
 
         UnitOfMeasure uom7 = new UnitOfMeasure();
         uom7.setUom("Pint");
-        unitOfMeasureRepository.save(uom7);
+        unitOfMeasureReactiveRepository.save(uom7).block();
 
         UnitOfMeasure uom8 = new UnitOfMeasure();
         uom8.setUom("Dash");
-        unitOfMeasureRepository.save(uom8);
+        unitOfMeasureReactiveRepository.save(uom8).block();
     }
 
 
@@ -184,9 +200,9 @@ public class RecipeBootStrap  implements ApplicationListener<ContextRefreshedEve
     @Override
     @Transactional
     public void onApplicationEvent(ContextRefreshedEvent event) {
-        recetteRepository.saveAll(getRecettes());
+        recetteReactiveRepository.saveAll(getRecettes());
         log.debug("------ Startup is running now ----- ");
-        Iterable<Recette> rr = recetteRepository.findAll();
+        Flux<Recette> rr = recetteReactiveRepository.findAll();
 
         log.info("COUNT RECETTE: {}",recetteReactiveRepository.count().block().toString());
         log.info("COUNT Category: {}",categoryReactiveRepository.count().block().toString());

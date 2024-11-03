@@ -36,7 +36,7 @@ public class IndexController {
         if (unitOfMeasureOptional.isPresent()) {
             System.out.println(unitOfMeasureOptional.get().getUom() + " has id " + unitOfMeasureOptional.get().getId());
         } */
-        model.addAttribute("recettes", recetteService.getRecettes());
+        model.addAttribute("recettes", recetteService.getRecettes().collectList().block());
         return "index";
     }
 }

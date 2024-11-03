@@ -5,6 +5,7 @@ import ca.gforcesoftware.recetteprojet.converters.RecetteCommandToRecette;
 import ca.gforcesoftware.recetteprojet.converters.RecetteToRecetteCommand;
 import ca.gforcesoftware.recetteprojet.domain.Recette;
 import ca.gforcesoftware.recetteprojet.repositories.RecetteRepository;
+import ca.gforcesoftware.recetteprojet.repositories.reactive.RecetteReactiveRepository;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.junit.MockitoJUnitRunner;
@@ -12,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Transactional;
+import reactor.core.publisher.Flux;
 
 import static org.junit.Assert.*;
 
@@ -27,7 +29,7 @@ public class RecetteServiceIT {
     RecetteService recetteService;
 
     @Autowired
-    RecetteRepository recetteRepository;
+    RecetteReactiveRepository recetteRepository;
 
     @Autowired
     RecetteCommandToRecette recetteCommandToRecette;
@@ -38,8 +40,8 @@ public class RecetteServiceIT {
     @Transactional
     @Test
     public void testSaveOfDescription() throws Exception {
-        Iterable<Recette> recettes = recetteRepository.findAll();
-        Recette testRecette = recettes.iterator().next();
+        Flux<Recette> recettes = recetteRepository.findAll();
+        Recette testRecette = recettes.next().block();
         RecetteCommand recetteCommand = recetteToRecetteCommand.convert(testRecette);
 
         recetteCommand.setDescription(NEW_DESCRIPTION);

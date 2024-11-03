@@ -9,10 +9,12 @@ import ca.gforcesoftware.recetteprojet.domain.Ingredient;
 import ca.gforcesoftware.recetteprojet.domain.Recette;
 import ca.gforcesoftware.recetteprojet.repositories.RecetteRepository;
 import ca.gforcesoftware.recetteprojet.repositories.UnitOfMeasureRepository;
+import ca.gforcesoftware.recetteprojet.repositories.reactive.RecetteReactiveRepository;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import reactor.core.publisher.Mono;
 
 import java.util.Optional;
 
@@ -33,7 +35,7 @@ public class IngredientServiceImplTest {
     UnitOfMeasureRepository unitOfMeasureRepository;
 
     @Mock
-    RecetteRepository recetteRepository;
+    RecetteReactiveRepository recetteReactiveRepository;
 
     IngredientService ingredientService;
 
@@ -49,7 +51,7 @@ public class IngredientServiceImplTest {
         MockitoAnnotations.initMocks(this);
 
         ingredientService = new IngredientServiceImpl(ingredientToIngredientCommand,
-                ingredientCommandToIngredient, recetteRepository, unitOfMeasureRepository);
+                ingredientCommandToIngredient, recetteReactiveRepository, unitOfMeasureRepository);
     }
 
     @Test
@@ -71,15 +73,15 @@ public class IngredientServiceImplTest {
         recette.addIngredient(ingredient2);
         recette.addIngredient(ingredient3);
 
-        Optional<Recette> recetteOptional = Optional.of(recette);
+        Mono<Recette> recetteOptional = Mono.just(recette);
 
-        when(recetteRepository.findById(anyString())).thenReturn(recetteOptional);
+        when(recetteReactiveRepository.findById(anyString())).thenReturn(recetteOptional);
 
-        IngredientCommand ingredientCommand = ingredientService.findByRecetteIDAndIngredientId("1", "3");
+        IngredientCommand ingredientCommand = ingredientService.findByRecetteIDAndIngredientId("1", "3").block();
 
         assertEquals("1", ingredientCommand.getRecetteId());
         assertEquals("3", ingredientCommand.getId());
-        verify(recetteRepository,times(1)).findById(anyString());
+        verify(recetteReactiveRepository,times(1)).findById(anyString());
     }
 
     @Test
@@ -88,19 +90,20 @@ public class IngredientServiceImplTest {
         ingredientCommand.setId("3");
         ingredientCommand.setRecetteId("2");
 
-        Optional<Recette> recetteOptional = Optional.of(new Recette());
+
         Recette recette = new Recette();
         recette.addIngredient( new Ingredient());
         recette.getIngredients().iterator().next().setId("3");
+        Mono<Recette> recetteMono =Mono.just(recette);
 
-        when(recetteRepository.findById(anyString())).thenReturn(recetteOptional);
-        when(recetteRepository.save(any())).thenReturn(recette);
+        when(recetteReactiveRepository.findById(anyString())).thenReturn(recetteMono);
+        when(recetteReactiveRepository.save(any())).thenReturn(recetteMono);
 
-        IngredientCommand savedCommand = ingredientService.saveIngredientCommand(ingredientCommand);
+        IngredientCommand savedCommand = ingredientService.saveIngredientCommand(ingredientCommand).block();
 
         assertEquals("3", savedCommand.getId());
-        verify(recetteRepository,times(1)).findById(anyString());
-        verify(recetteRepository,times(1)).save(any());
+        verify(recetteReactiveRepository,times(1)).findById(anyString());
+        verify(recetteReactiveRepository,times(1)).save(any());
 
     }
 
@@ -127,14 +130,14 @@ public class IngredientServiceImplTest {
        // ingredient3.setRecette(recette);
 
 
-        Optional<Recette> recetteOptional = Optional.of(recette);
-        when(recetteRepository.findById(anyString())).thenReturn(recetteOptional);
+        Mono<Recette> recetteMono = Mono.just(recette);
+        when(recetteReactiveRepository.findById(anyString())).thenReturn(recetteMono);
 
         ingredientService.deleteById("9","1");
 
-        verify(recetteRepository,times(1)).findById(anyString());
+        verify(recetteReactiveRepository,times(1)).findById(anyString());
         //Note this one , I want to select any() as recette object
-        verify(recetteRepository,times(1)).save(any(Recette.class));
+        verify(recetteReactiveRepository,times(1)).save(any(Recette.class));
         //The line below does not work and it raise a mockito misusing exception!!
         //verify(ingredientService,times(1)).deleteById(anyString(),anyString());
 

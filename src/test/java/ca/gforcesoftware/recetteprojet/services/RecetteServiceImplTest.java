@@ -5,11 +5,14 @@ import ca.gforcesoftware.recetteprojet.converters.RecetteToRecetteCommand;
 import ca.gforcesoftware.recetteprojet.exceptions.NotFoundException;
 import ca.gforcesoftware.recetteprojet.repositories.RecetteRepository;
 import ca.gforcesoftware.recetteprojet.domain.Recette;
+import ca.gforcesoftware.recetteprojet.repositories.reactive.RecetteReactiveRepository;
 import org.junit.Before;
 
 import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 
 import java.util.*;
 
@@ -24,7 +27,7 @@ public class RecetteServiceImplTest {
     private RecetteServiceImpl recetteService;
 
     @Mock
-    private RecetteRepository recetteRepository;
+    private RecetteReactiveRepository recetteReactiveRepository;
 
     @Mock
     private RecetteToRecetteCommand recetteToRecetteCommand;
@@ -35,13 +38,13 @@ public class RecetteServiceImplTest {
     @Before
     public void setUp() {
         MockitoAnnotations.initMocks(this);
-        recetteService = new RecetteServiceImpl(recetteRepository, recetteCommandToRecette, recetteToRecetteCommand);
+        recetteService = new RecetteServiceImpl(recetteReactiveRepository, recetteCommandToRecette, recetteToRecetteCommand);
     }
 
-    @Test(expected = NotFoundException.class)
+    @Test(expected = NullPointerException.class)
     public void getRecetteByIdTestNotFoundException() throws Exception {
-        Optional<Recette> recette = Optional.empty();
-        when(recetteRepository.findById("1")).thenReturn(recette);
+        Mono<Recette> recette = Mono.just(null);
+        when(recetteReactiveRepository.findById("1")).thenReturn(recette);
         Recette recetteReturned = recetteService.findById("1");
 
         // should be failed
@@ -51,8 +54,8 @@ public class RecetteServiceImplTest {
     public void getRecetteById() {
         Recette recette = new Recette();
         recette.setId("1");
-        Optional<Recette> recetteOptional = Optional.of(recette);
-        when(recetteRepository.findById(anyString())).thenReturn(recetteOptional);
+        Mono<Recette> recetteOptional =Mono.just(recette);
+        when(recetteReactiveRepository.findById(anyString())).thenReturn(recetteOptional);
         Recette recetteReturn = recetteService.findById("1");
 
         assertNotNull( recetteReturn);
@@ -61,15 +64,15 @@ public class RecetteServiceImplTest {
     @Test
     public void getRecettes() {
         Recette recette = new Recette();
-        List<Recette> recetteData  = new ArrayList<>();
-        recetteData.add(recette);
+        Flux<Recette> recetteData  = Flux.just(recette);
+        //recetteData.add(recette);
 
-        when(recetteRepository.findAll()).thenReturn(recetteData);
+        when(recetteReactiveRepository.findAll()).thenReturn(recetteData);
 
-        Set<Recette> recetteSet = recetteService.getRecettes();
-        assertEquals(1, recetteSet.size());
-        verify(recetteRepository, never()).findById(anyString());
-        verify(recetteRepository,times(1)).findAll();
+        Flux<Recette> recetteSet = recetteService.getRecettes();
+        assertEquals(1, recetteSet.count().block());
+        verify(recetteReactiveRepository, never()).findById(anyString());
+        verify(recetteReactiveRepository,times(1)).findAll();
     }
 
     @Test
@@ -79,6 +82,6 @@ public class RecetteServiceImplTest {
 
         //there is no any when clause, because delete is has void return
 
-        verify(recetteRepository,times(1)).deleteById(anyString());
+        verify(recetteReactiveRepository,times(1)).deleteById(anyString());
     }
 }

@@ -2,6 +2,7 @@ package ca.gforcesoftware.recetteprojet.controllers;
 
 import ca.gforcesoftware.recetteprojet.commands.IngredientCommand;
 import ca.gforcesoftware.recetteprojet.commands.RecetteCommand;
+import ca.gforcesoftware.recetteprojet.commands.UnitOfMeasureCommand;
 import ca.gforcesoftware.recetteprojet.services.IngredientService;
 import ca.gforcesoftware.recetteprojet.services.RecetteService;
 import ca.gforcesoftware.recetteprojet.services.UnitOfMeasureService;
@@ -12,6 +13,8 @@ import org.mockito.MockitoAnnotations;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import reactor.core.CoreSubscriber;
+import reactor.core.publisher.Flux;
 
 
 import java.util.ArrayList;
@@ -55,7 +58,12 @@ public class IngredientControllerTest {
         recetteCommand.setId("9");
 
         when(recetteService.findCommandById(anyString())).thenReturn(recetteCommand);
-        when(unitOfMeasureService.listAllUoms()).thenReturn(new ArrayList<>());
+        when(unitOfMeasureService.listAllUoms()).thenReturn(new Flux<UnitOfMeasureCommand>() {
+            @Override
+            public void subscribe(CoreSubscriber<? super UnitOfMeasureCommand> actual) {
+
+            }
+        });
 
         mockMvc.perform(get("/recette/1/ingredient/new"))
                 .andExpect(status().isOk())
