@@ -9,10 +9,10 @@
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>ca.gforceSoftware</groupId>
-    <artifactId>RecetteProjet</artifactId>
+    <artifactId>reactivemongorecette</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>RecetteProjet</name>
-    <description>RecetteProjet</description>
+    <name>ReactiveMongoRecette</name>
+    <description>This is same as Recette project with change in MongoDB and Reactive programming</description>
     <url/>
     <licenses>
         <license/>
